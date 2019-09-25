@@ -7,14 +7,10 @@ output: html_document
 
 <br />
 
-## JABBA-SELECTbeta
-Development repository for JABBA-Select to be added under (https://github.com/jabbamodel) 
+## JABBA-SELECT
+<b> This Repository includes:
 
-https://github.com/Henning-Winker/JABBA-SELECTbeta/blob/master/SWOss3/selectSWOss3.csv
-
-<b> The Respority includes:
-
-+ The JABBA-Select source code beta version [`JABBA_SELECTv1.2beta.R`](https://github.com/Henning-Winker/JABBA-SELECTbeta/blob/master/JABBA_SELECTv1.2beta.R), which is called from an assessment specific "Prime" file.
++ The JABBA-Select source code [`JABBA_SELECTv1.1.R`](https://github.com/JABBAmodel/JABBA-SELECT/blob/master/JABBA_SELECTv1.2beta.R), which is called from an assessment specific "Prime" file.
 
 + A basic [simulation example] (https://github.com/Henning-Winker/JABBA-SELECTbeta/blob/master/KOBsim_example) [`JABBA_SELECT_prime_KOBsim.R`](https://github.com/Henning-Winker/JABBA-SELECTbeta/blob/master/KOBsim_example/JABBA_SELECT_prime_KOBsim.R). New data can be generated from a stochastic age-structured simulation model from  [`asmsim2jabba_data.R`](https://github.com/Henning-Winker/JABBA-SELECTbeta/blob/master/KOBsim_example/asmsim2jabba_data.R), which calls the function [`OM_ccsra2jabba_Fn.R`](https://github.com/Henning-Winker/JABBA-SELECTbeta/blob/master/KOBsim_example/OM_ccsra2jabba_Fn.R) that has been adopted from the R package [CCSRA](https://github.com/James-Thorson/CCSRA).
 
