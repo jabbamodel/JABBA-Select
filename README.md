@@ -47,6 +47,6 @@ regulations), and can be simultaneously fitted to multiple abundance indices wit
 
 
 **Reference**
-
+Winker H., Carvalho F., Thorson J.T., Kell L.T., Parker D., Kapur M., Sharma R., Booth A.J., Kerwatha S.E. (2019) <U>JABBA-Select: Incorporating life history and fisheries’ selectivity into surplus production models</U> *Fisheries Research* **XX**: xx-xx.](https://www.sciencedirect.com/science/article/pii/S0165783618300845)   
 [Winker, H., Carvalho, F., Kapur, M. (2018) <U>JABBA: Just Another Bayesian Biomass Assessment.</U> *Fisheries Research* **204**: 275-288.](https://www.sciencedirect.com/science/article/pii/S0165783618300845)   
 
