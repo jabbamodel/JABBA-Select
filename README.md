@@ -7,17 +7,14 @@ output: html_document
 
 <br />
 
-## JABBA-SELECT:
+## JABBA-SELECT
 ### Incorporating life history and fisheries’ selectivity into surplus production models
 The materials in this repository present the JABBA-Select stock assessment model (Winker et al. 2019). JABBA-Select textends the Bayesian state-space surplus production model JABBA [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) to account for selectivity-induced distortion of abundance indices and impacts on stock productivity. Like JABBA, JABBA-Select is implemented in JAGS, called from the statistical programming environment R. JABBA-Select retains the core features of a basic JABBA modelling framework (Winker et al., 2018), including its modular coding structure, a suite of options to fix or estimate process and observation variance components and inbuilt graphics to illustrate model fit diagnostics and stock status results. 
 
 Central to our approach is the integration of prior information from spawning biomass- and yield-per-recruit models with integrated Beverton-Holt spawner recruitment relationship (BH-SRR) into JABBA-Select, which we subsequently refer to as age-structured equilibrium model (ASEM).To directly link the generalized three parameter SPM by Pella and Tomlinson (1969) to the ASEM, we assume that surplus production is a function of spawning biomass and then express surplus production as a function of our formulation of <i>H<sub>MSY</sub></i> instead of the intrinsic rate of population increase, so that:    
 
 
-<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/SPM_Eq.1.png" height="70">
-
-
-          (Equation 1)
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/SPM_Eq.1.png" height="70">     (Equation 1)
 
 where <i>SB<sub>0</sub></i> is the unfished biomass and m is a shape parameter that determines at which <i>SB/SB<sub>0</sub></i> ratio maximum surplus production is attained. The functional links between the ASEM and Pella-Tomlinson SPM are illustrated in Fig. 1, which provides a means to translate typical input parameters of age-structured models into the key SPM parameters <i>r</i> and <i>m</i>. 
 
