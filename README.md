@@ -13,12 +13,10 @@ The materials in this repository present the JABBA-Select stock assessment model
 
 Central to our approach is the integration of prior information from spawning biomass- and yield-per-recruit models with integrated Beverton-Holt spawner recruitment relationship (BH-SRR) into JABBA-Select, which we subsequently refer to as age-structured equilibrium model (ASEM).To directly link the generalized three parameter SPM by Pella and Tomlinson (1969) to the ASEM, we assume that surplus production is a function of spawning biomass and then express surplus production as a function of our formulation of <i>H<sub>MSY</sub></i> instead of the intrinsic rate of population increase, so that:    
 
-```{r, fig.width = 4, echo = FALSE}
-# Small fig.width
-#library(knitr,warn.conflicts =FALSE)
-knitr::include_graphics("C:/Work/Research/GitHub/JABBA-SELECT/Figures/SPM_Eq.1.png")
 
-```
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/SPM_Eq.1.png" height="70">
+
+
           (Equation 1)
 
 where <i>SB<sub>0</sub></i> is the unfished biomass and m is a shape parameter that determines at which <i>SB/SB<sub>0</sub></i> ratio maximum surplus production is attained. The functional links between the ASEM and Pella-Tomlinson SPM are illustrated in Fig. 1, which provides a means to translate typical input parameters of age-structured models into the key SPM parameters <i>r</i> and <i>m</i>. 
