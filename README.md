@@ -7,7 +7,16 @@ output: html_document
 
 <br />
 
-## JABBA-SELECT
+## JABBA-SELECT:Incorporating life history and fisheries’ selectivity into surplus production models
+The materials in this repository present the JABBA-Select stock assessment model. JABBA-Select textends the Bayesian state-space surplus production model JABBA [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) to account for selectivity-induced distortion of abundance indices and impacts on stock productivity. 
+
+Central to our approach is the integration of prior information from spawning biomass- and yield-per-recruit models with integrated Beverton-Holt spawner recruitment relationship (BH-SRR) into JABBA-Select, which we subsequently refer to as age-structured equilibrium model (ASEM) 
+
+
+
+
+
+
 <b> This Repository includes:
 
 + The JABBA-Select source code [`JABBA_SELECTv1.1.R`](https://github.com/JABBAmodel/JABBA-SELECT/blob/master/JABBA_SELECTv1.2beta.R), which is called from an assessment specific "Prime" file.
@@ -20,10 +29,9 @@ output: html_document
 
 
 ## JABBA-Select: an alternative surplus production model to account for changes in selectivity and relative mortality from multiple fisheries
-The JABBA-Select model extends the Bayesian state-space surplus production model JABBA [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) to account for selectivity-induced distortion of biomass indices and stock productivity. Central to our approach is the integration of prior information from spawning biomass- and yield-per-recruit models with integrated Beverton-Holt spawner recruitment relationship (BH-SRR) into JABBA-Select, which we subsequently refer to as age-structured equilibrium model (ASEM) 
+The JABBA-Select model extends the Bayesian state-space surplus production model JABBA [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) to account for selectivity-induced distortion of biomass indices and stock productivity. 
 
-To directly link the generalized three parameter SPM by Pella and Tomlinson (1969) to the ASEM, we assume that surplus production is a function of spawning biomass and then express surplus production as a function of our formulation of HMSY instead of the intrinsic rate of population increase, so that:    
-
+Central to our approach is the integration of prior information from spawning biomass- and yield-per-recruit models with integrated Beverton-Holt spawner recruitment relationship (BH-SRR) into JABBA-Select, which we subsequently refer to as age-structured equilibrium model (ASEM).To directly link the generalized three parameter SPM by Pella and Tomlinson (1969) to the ASEM, we assume that surplus production is a function of spawning biomass and then express surplus production as a function of our formulation of HMSY instead of the intrinsic rate of population increase, so that:    
 
 ```{r, fig.width = 4, echo = FALSE}
 # Small fig.width
@@ -45,8 +53,9 @@ where <i>SB<sub>0</sub></i> is the unfished biomass and m is a shape parameter t
 <br />
 
 JABBA-Select has four novel elements compared to conventional Surplus Production Models:
+
 + The model uses the expression of harvest rate at MSY (<i>H<sub>MSY</sub></i>), which we define here as <i>H<sub>MSY</sub> = MSY /SB<sub>MSY</sub> </i>, as a surrogate for the intrinsic rate of population increase <i>r</i>, and derives the shape parameter <i>m</i> of the surplus production curve as a function of SBMSY/SB0. This provides a means to generate prior distributions of likely values of <i>H<sub>MSY</sub></i> and <i>m</i> from the ASEM using life history parameters and fishery-selectivity inputs (Fig. 2a)
-+	The parameter H<sub>MSY<sub>s</sub></sub> is specific to fishing operations that fish with selectivity <i>s</i> and can be adjusted to account for selectivity-induced changes in the overall year-specific stock productivity <i>H<sub>MSY<sub>y</sub></sub></i> as well as on the abundance indices (Fig. 3b).
++ The parameter H<sub>MSY<sub>s</sub></sub> is specific to fishing operations that fish with selectivity <i>s</i> and can be adjusted to account for selectivity-induced changes in the overall year-specific stock productivity <i>H<sub>MSY<sub>y</sub></sub></i> as well as on the abundance indices (Fig. 3b).
 + The model separates between exploitable biomass EBs and spawning biomass SB; the former is used to fit indices given selectivity s, and the latter to predict surplus production. The parameters used to describe the ratio of <i>EB<sub>s,y</sub></i> and <i>SB<sub>y</sub></i>, as a function of spawning biomass depletion relative to average unfished levels are inferred from the ASEM (Fig. 1c)
 + The model accounts for the underlying correlation structure between generated values <i>H<sub>MSY</sub></i> and <i>m</i> through the formulation of a multivariate normal (MVN) prior, which allows for estimating both parameters jointly within the model (Fig. 1d).   
 
@@ -54,6 +63,8 @@ JABBA-Select has four novel elements compared to conventional Surplus Production
 <i> Fig. 2.  Illustration of the four novel elements of JABBA-Select based on the stock parameters for silver kob: (a) Comparison of the functional forms of the yield curves produced from the Age-Structured Equilibrium Model (ASEM) with the approximation by the JABBA-Select surplus production function (Eq. 1) as function spawning biomass depletion SB / SB<sub>0</sub>, using the life history parameter input values and a range of length-at-50%-selectivity values; (b) JABBA-Select model estimates  of time-varying productivity parameters of H<sub>MSY<sub>y</sub></sub>, (c) ASEM-derived selectivity-dependent distortion in the exploitable biomass (EB) relative to the spawning biomass (SB) over a wide a range of SB<sub>0</sub> iterations, with the dashed line denoting the increase in minimum size limit for line-caught silver kob and the remainder of variations attributed to variations in the relative catch contribution the of inshore trawl; and (d) Multivariate normal (MVN) approximation of log⁡(H<sub>MSY<sub>f,s,k</sub></sub> and log(m<sub>f,s,k</sub>) random deviates generated from the ASEM via Monte-Carlo simulations </i>.
 
 <br />
+
+
 **Reference**
 
 [Winker, H., Carvalho, F., Kapur, M. (2018) <U>JABBA: Just Another Bayesian Biomass Assessment.</U> *Fisheries Research* **204**: 275-288.](https://www.sciencedirect.com/science/article/pii/S0165783618300845)   
