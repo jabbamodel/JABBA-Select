@@ -21,7 +21,7 @@ where <i>SB<sub>0</sub></i> is the unfished biomass and m is a shape parameter t
 <br />
 <br />
 
-<img src="C:/Work/Research/GitHub/JABBA-SELECTbeta/Figures/Fig2_schematic.PNG" width="600">
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/Fig2_Schematic.png" width="600">
 
 <i> Fig. 1. Schematic of functional relationships between the productivity parameter r and the shape parameter of the surplus production function and the Age-Structured Equilibrium Model (ASEM; i.e. yield- and spawning biomass-per-recruit models with integrated spawner recruitment relationship). Numbers in boxes denote the sequence of deriving deviates of r and m from life history and selectivity parameter inputs into the ASEM. </i>
 
@@ -34,7 +34,7 @@ JABBA-Select has four novel elements compared to conventional Surplus Production
 + The model separates between exploitable biomass EBs and spawning biomass SB; the former is used to fit indices given selectivity s, and the latter to predict surplus production. The parameters used to describe the ratio of <i>EB<sub>s,y</sub></i> and <i>SB<sub>y</sub></i>, as a function of spawning biomass depletion relative to average unfished levels are inferred from the ASEM (Fig. 1c)
 + The model accounts for the underlying correlation structure between generated values <i>H<sub>MSY</sub></i> and <i>m</i> through the formulation of a multivariate normal (MVN) prior, which allows for estimating both parameters jointly within the model (Fig. 1d).   
 
-![Figure 2](C:/Work/Research/GitHub/JABBA-SELECTbeta/Figures/Fig1_4elements.png)
+![Figure 2](https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/Fig1_4elements.png)
 <i> Fig. 2.  Illustration of the four novel elements of JABBA-Select based on the stock parameters for silver kob: (a) Comparison of the functional forms of the yield curves produced from the Age-Structured Equilibrium Model (ASEM) with the approximation by the JABBA-Select surplus production function (Eq. 1) as function spawning biomass depletion SB / SB<sub>0</sub>, using the life history parameter input values and a range of length-at-50%-selectivity values; (b) JABBA-Select model estimates  of time-varying productivity parameters of H<sub>MSY<sub>y</sub></sub>, (c) ASEM-derived selectivity-dependent distortion in the exploitable biomass (EB) relative to the spawning biomass (SB) over a wide a range of SB<sub>0</sub> iterations, with the dashed line denoting the increase in minimum size limit for line-caught silver kob and the remainder of variations attributed to variations in the relative catch contribution the of inshore trawl; and (d) Multivariate normal (MVN) approximation of log⁡(H<sub>MSY<sub>f,s,k</sub></sub> and log(m<sub>f,s,k</sub>) random deviates generated from the ASEM via Monte-Carlo simulations </i>.
 
 <br />
