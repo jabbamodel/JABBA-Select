@@ -1,0 +1,7 @@
+"Fleet.id","Fleet","Selectivity","CPUE.units","Catch","CPUE","q"
+1,"S1",1,1,TRUE,FALSE,0
+2,"S2",2,1,TRUE,FALSE,0
+3,"A1.S1",1,1,FALSE,TRUE,1
+4,"A1.S2",2,1,FALSE,TRUE,1
+5,"A2.S1",1,1,FALSE,TRUE,2
+6,"A2.S2",2,1,FALSE,TRUE,2
