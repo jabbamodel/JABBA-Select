@@ -9,15 +9,14 @@ output: html_document
 
 ## JABBA-SELECT:
 ### Incorporating life history and fisheries’ selectivity into surplus production models
-The materials in this repository present the JABBA-Select stock assessment model. JABBA-Select textends the Bayesian state-space surplus production model JABBA [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) to account for selectivity-induced distortion of abundance indices and impacts on stock productivity. Like JABBA, JABBA-Select is implemented in JAGS, called from the statistical programming environment R. JABBA-Select retains the core features of a basic JABBA modelling framework (Winker et al., 2018), including its modular coding structure, a suite of options to fix or estimate process and observation
-variance components and inbuilt graphics to illustrate model fit diagnostics and stock status results. 
+The materials in this repository present the JABBA-Select stock assessment model (Winker et al. 2019). JABBA-Select textends the Bayesian state-space surplus production model JABBA [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) to account for selectivity-induced distortion of abundance indices and impacts on stock productivity. Like JABBA, JABBA-Select is implemented in JAGS, called from the statistical programming environment R. JABBA-Select retains the core features of a basic JABBA modelling framework (Winker et al., 2018), including its modular coding structure, a suite of options to fix or estimate process and observation variance components and inbuilt graphics to illustrate model fit diagnostics and stock status results. 
 
-Central to our approach is the integration of prior information from spawning biomass- and yield-per-recruit models with integrated Beverton-Holt spawner recruitment relationship (BH-SRR) into JABBA-Select, which we subsequently refer to as age-structured equilibrium model (ASEM).To directly link the generalized three parameter SPM by Pella and Tomlinson (1969) to the ASEM, we assume that surplus production is a function of spawning biomass and then express surplus production as a function of our formulation of HMSY instead of the intrinsic rate of population increase, so that:    
+Central to our approach is the integration of prior information from spawning biomass- and yield-per-recruit models with integrated Beverton-Holt spawner recruitment relationship (BH-SRR) into JABBA-Select, which we subsequently refer to as age-structured equilibrium model (ASEM).To directly link the generalized three parameter SPM by Pella and Tomlinson (1969) to the ASEM, we assume that surplus production is a function of spawning biomass and then express surplus production as a function of our formulation of <i>H<sub>MSY</sub></i> instead of the intrinsic rate of population increase, so that:    
 
 ```{r, fig.width = 4, echo = FALSE}
 # Small fig.width
 #library(knitr,warn.conflicts =FALSE)
-knitr::include_graphics("C:/Work/Research/GitHub/JABBA-SELECTbeta/Figures/SPM_Eq.1.png")
+knitr::include_graphics("C:/Work/Research/GitHub/JABBA-SELECT/Figures/SPM_Eq.1.png")
 
 ```
           (Equation 1)
