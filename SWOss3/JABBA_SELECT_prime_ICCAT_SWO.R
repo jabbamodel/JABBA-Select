@@ -16,7 +16,7 @@ library(mvtnorm);library(scales);library(reshape2);library(r4ss)
 
 #---------------------------------------------------------------------
 # Set Working directory file where to store the results
-File = "C:/Work/Research/GitHub/JABBA-SELECTdev"
+File = "C:/Work/Research/GitHub/JABBA-SELECT"
 # Set working directory for JABBA R source code
 JABBA.file = "C:/Work/Research/GitHub/JABBA-SELECT"
 # Set Assessment
