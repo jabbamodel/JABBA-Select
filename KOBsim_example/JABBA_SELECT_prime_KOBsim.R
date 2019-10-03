@@ -50,7 +50,6 @@ s=1
 
 for(s in 1:length(Scenarios)){
   Scenario = Scenarios[s] 
-  Mod.names = c("JS") 
   if(s==2) SELECT = FALSE # Reduce JABBA-Select to a Bayesian Pella-Tomlinson
   
   

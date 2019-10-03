@@ -4,6 +4,7 @@
 ## written by Henning Winker
 ## henning.winker@gmail.com
 ##><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
+Mod.names = "JS" 
 cat(paste0("\n","- Run Model ",Mod.names,"\n"))
 #setwd(paste(File))
 dir.create(paste0(File,"/",assessment,"/",Scenario,"_",Mod.names),showWarnings = F)
@@ -51,6 +52,7 @@ if(exists("jabba2FRL")==FALSE) jabba2FRL = FALSE
 if(sigma.proc==FALSE){
 pr.proc=c(2,2)  
 }
+
 #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
 
 
@@ -2301,8 +2303,8 @@ if(Projection ==TRUE){
 #---------------------------------------------------------------------------------
 rownames(Stock_trj) = 1:nrow(Stock_trj)
 Stock.trj=data.frame(Scenario,Yr=years,Total.Catch=TC,data.frame(Stock_trj))
-jabbaS_out = list(Data=surplus.dat,Pars=results,Estimates=Table,Stock.trj=Stock.trj,Fits = jabba.res,ProcErrDev=procE.dev, SPphase=SPphase)
-save(jabbaS_out, file=paste0(output.dir,"/jabbaSout_",assessment,"_",Scenario,".RData"))  
+jabba_out = list(Data=surplus.dat,Pars=results,Estimates=Table,Stock.trj=Stock.trj,Fits = jabba.res,ProcErrDev=procE.dev, SPphase=SPphase)
+save(jabba_out, file=paste0(output.dir,"/jabbaout_",assessment,"_",Scenario,".RData"))  
 cat(paste0("\n","Scenario ",Mod.names,"_",Scenario," - DONE!","\n"))
 #---------------------------------------------------------------------------------
 #compile jabba2FRL
@@ -2316,8 +2318,8 @@ refpts = data.frame(factor=assessment,level=Scenario,quant = c("hat","var"), k=c
 pfunc = data.frame(factor=assessment,level=Scenario, k=median(posteriors$SB0),r=median(posteriors$Hmsy.y[,length(years)])*(m-1)/(1-1/m),p = m-1,shape=median(posteriors$SBmsy)/median(posteriors$SB0),m)          
 curves=data.frame(factor=assessment,level=Scenario,ssb=SPphase$SB_i,yield=SPphase$SP)                   
 dgs = data.frame(factor=assessment,level=Scenario,name=jabba.res$name,year=jabba.res$year,season=1,obs=jabba.res$obs,hat=jabba.res$hat,residual=jabba.res$residual,tails=jabba.res$tails)
-js = list(timeseries=timeseries,refpts=refpts,pfunc=pfunc,ts2=NULL,curves=curves,dgs=dgs)
-save(js,file=paste0(output.dir,"/js.",Scenario,".Rdata"))
+jb = list(timeseries=timeseries,refpts=refpts,pfunc=pfunc,ts2=NULL,curves=curves,dgs=dgs)
+save(jb,file=paste0(output.dir,"/jb.",Scenario,".Rdata"))
 }
 #---------------------------------------------------------------------------------
 
