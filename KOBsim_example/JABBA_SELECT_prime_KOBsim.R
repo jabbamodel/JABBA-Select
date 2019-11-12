@@ -16,13 +16,15 @@ library(mvtnorm);library(scales)
 
 #---------------------------------------------------------------------
 # Set Working directory file where to store the results
+#---------------------------------------------------------------------
 File = "C:/Work/Research/GitHub/JABBA-SELECT/KOBsim_example"
-# Set working directory for JABBA R source code
+# Set working directory for JABBA-Select R source code
 JABBA.file = "C:/Work/Research/GitHub/JABBA-SELECT"
-# Set Assessment
-assessment = "KOBSim"
-# Version
+# JABBA-Select Version
 version = "v1.1"
+# Set Assessment file: assement folder within File that includes .csv input files
+assessment = "KOBSim"
+
 
 #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
 # Graphic, Output, Saving (.RData) settings 
