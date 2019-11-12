@@ -54,15 +54,15 @@ JABBA-SELECT is formulated to accommodate abundance indices from multiple source
 JABBA-Select aims to account for the effects of different selectivity patterns on the stock's surplus production and arising distortions between spawing biomass (SB) and exploitable biomass (EB) when fitting the CPUE data. The selectivity functions under consideration are summarized in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) .csv file. The JABBA selex function provides the option to specify a 2-parameter logistic as well as a 5-parameter piece-wise dome-shaped selectivity curve, with a logistic function for the ascending limb and the descending limb described by the mean and CV of a half-normal distribution (Huynh et al., 2018). 
 <br><br>
 The KOBSim example only focuses on the simple 2-parameter logistic function, which requires the lengths where 50% and 95% of fish are retained as catch. The early and recent selectivity functions are referenced a S1 and S2, respectively. The first column in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) file lists the 5 parameters SL50, SL95 (anscending logistic), SL.desc (mean of double-normal), CV.desc (rate of descent) and min.desc. The next columns provide the parameter values. If the latter three parameters (SL.desc, CV.desc, min.desc) are left blank or provided as `NA`, the selex function automically reduces to a logistic.
-<br>
 
 #####<i>4. Assigning Selectivity to Catch and CPUE </i>
 
 JABBA-Select requires to assign a selection function to each Catch and CPUE time series provided in the form of columns in the [`catch`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) and the
-[`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input files, respectively. The [`select`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selectKOBsim.csv) input file is designed to facilitate this. <br>
-<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/select.png" width="600">
+[`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input files, respectively. The [`select`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selectKOBsim.csv) input file is designed to facilitate this. <br><br>
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/select.png" width="700">
 
-
+Column `Fleet.ID` specifies an index of unique numbers for each Catch and CPUE time series, where Catch series must be listed first, followed by CPUE indices. Column `Fleet` specifies the name labels for of each Catch and CPUE series corresponding column names chosen by the user in the [`catch`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) and the
+[`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input files.         
 
 
 <br><br><br>
