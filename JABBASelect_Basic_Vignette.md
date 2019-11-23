@@ -70,7 +70,14 @@ JABBA-Select requires to assign a selection function to each Catch and CPUE time
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/select.png" width="900" height="200">
 
 Column `Fleet.ID` specifies an index of unique numbers for each Catch and CPUE time series, where Catch series must be listed first, followed by CPUE indices. Column `Fleet` specifies the name labels for of each Catch and CPUE series corresponding column names chosen by the user in the [`catch`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) and the
-[`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input files.         
+[`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input files. The column `Selectivity` assigns the respective `Fleet` to a selectivity function provided in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) file. In this example, the catches of fleet S1 and S2 are assigned to the first and second listed selectivity functions (S1 & S2) in in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) by inputting 1 and 2, respectively. The CPUE indices (A1.S1, A1.S2, A2.S1, A2.S2) are then assigned in the same way. Column `CPUE.units` specify if CPUE is in weight = 1 or number = 0. Note that catch must be in weight. Column `Catch` specifies whether the time series represents catch, if TRUE, or cpue, if FALSE. Finally, column `q` assigns a estimable catchability coefficients each cpue index or 0 to catch. In this example index A1.S1 and A1.S2 are for example assumed to have a common q = 1, but different selectivity function due to the change in size limits.
+
+
+
+
+
+
+         
 
 
 
