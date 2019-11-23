@@ -71,22 +71,13 @@ JABBA-Select requires to assign a selection function to each Catch and CPUE time
 
 Column `Fleet.ID` specifies an index of unique numbers for each Catch and CPUE time series, where Catch series must be listed first, followed by CPUE indices. Column `Fleet` specifies the name labels for of each Catch and CPUE series corresponding column names chosen by the user in the [`catch`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) and the
 [`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input files. The column `Selectivity` assigns the respective `Fleet` to a selectivity function provided in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) file. In this example, the catches of fleet S1 and S2 are assigned to the first and second listed selectivity functions (S1 & S2) in in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) by inputting 1 and 2, respectively. The CPUE indices (A1.S1, A1.S2, A2.S1, A2.S2) are then assigned in the same way. Column `CPUE.units` specify if CPUE is in weight = 1 or number = 0. Note that catch must be in weight. Column `Catch` specifies whether the time series represents catch, if TRUE, or cpue, if FALSE. Finally, column `q` assigns a estimable catchability coefficients each cpue index or 0 to catch. In this example index A1.S1 and A1.S2 are for example assumed to have a common q = 1, but different selectivity function due to the change in size limits.
-
-
-
-
-
-
-         
-
-
-
+   
 All input files have to be saved in a folder that is named after the `assessment`, here `/KOBSim`.
 
 In the Prime file:
 `File =` requires the path where the assessment folder is located
-`JABBA =` requires the path where the JABBA model `JABBAv1.1.R` is located
-`version =` determines the JABBA model version
+`JABBA =` requires the path where the JABBA model `JABBA_SELECTv1.1.R` is located
+`version =` determines the `JABBA_SELECT` version
 `assessment =` assignes the assessment folder name
 
 ``` r
@@ -105,12 +96,13 @@ assessment = "KOBSim"
 
 ### Basic settings
 
-JABBA provides various Graphic, Output, Saving options that can be specified in the prime file. If not specified, JABBA will automatically use the default settings as specified on top of the [`JABBAv1.1.R`](https://github.com/jabbamodel/JABBA/blob/master/JABBAv1.1.R) code.
+JABBA-Select provides various Graphic, Output, Saving options that can be specified in the prime file. If not specified, JABBA will automatically use the default settings as specified on top of the [`JABBA-SELECTv1.1.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/JABBA-SELECTv1.1.R) code.
 
 ``` r
 #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
 # Graphic, Output, Saving (.RData) settings 
 #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
+SELECT = TRUE
 KOBE.plot = TRUE # Produces JABBA Kobe plot 
 KOBE.type = c("ICCAT","IOTC")[2] # ICCAT uses 3 colors; IOTC 4 (incl. orange) 
 Biplot= TRUE # Produces a "post-modern" biplot with buffer and target zones (Quinn & Collie 2005)
@@ -122,6 +114,9 @@ meanCPUE = FALSE # Uses averaged CPUE from state-space tool instead of individua
 Projection = TRUE # Use Projections: requires to define TACs vectors 
 save.projections = TRUE # saves projection posteriors as .RData object 
 catch.metric = "(t)" # Define catch input metric e.g. (tons) "000 t" etc 
+Reproduce.seed = FALSE # If FALSE a random seed assigned to each run, if TRUE set.seed(123)
+runASEM=TRUE  
+jabba2FRL = TRUE
 # Save entire posterior as .RData object
 save.all = FALSE # (if TRUE, a very large R object of entire posterior is saved)  
 #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
@@ -129,47 +124,19 @@ save.all = FALSE # (if TRUE, a very large R object of entire posterior is saved)
 
 ### Looping through scenarios
 
-JABBA makes it easy to run alternative scenarios in a loop. For this purpose, a unique name has to be assgined to each scenario. For example, a generic option to do this for 10 alternative scenarios is:
+JABBA-Select makes it easy to run alternative scenarios in a loop. For this purpose, a unique name has to be assgined to each scenario. For example, a generic option to do this for 10 alternative scenarios is:
 
 `Scenarios = c(paste0("Scenario",1:10))`
 
-but individual names may be specified as well, e.g. `Scenarios = c("Run_high_r","Run_medium_r","Run_low_r")`. JABBA automatically creates a folder for each scenario, including the `Input` and `output` subfolders. Note that the type of model `_Schaefer`, `_Fox` and `_Pella` is automatically added to the name of scenario folder.
+but individual names may be specified as well, e.g. `Scenarios = c("Run_high_h","Run_medium_h","Run_low_h")`. JABBA-Select automatically creates a folder for each scenario, including the `Input` and `output` subfolders. 
 
 ``` r
-#><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
-# Optional: Note Scenarios
-#><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
-# S1: Model including Brazil1 
-# S2: Model excluding Brazil1
-# S3: Base-case Model with time blocks on ESP and JPN 
-#><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
-# Specify Scenario name for output file names
-Scenarios = c(paste0("Scenario",1:3)) 
+Scenarios = c("SELECT","Pella")
+s=1
 
-# Execute multiple JABBA runs in loop 
-for(s in 1:3){
+for(s in 1:length(Scenarios)){
   Scenario = Scenarios[s] 
-  
-  #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
-  # Suplus Production model specifications
-  #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
-  
-  # Choose model type: 
-  # 1: Schaefer
-  # 2: Fox  
-  # 3: Pella-Tomlinsson  
-  
-  Model = c(3,3,3,3,3)[s] 
-  Mod.names = c("Schaefer","Fox","Pella")[Model]
-  
-  # Depensation opiton:
-  # Set Plim = Blim/K where recruitment may become impaired (e.g. Plim = 0.25) 
-  # Choose Plim = 0 to reduce to conventional Schaefer, Fox, Pella models 
-  Plim = 0
-  
-  # Required specification for Pella-Tomlinson (Model = 3)
-  BmsyK = 0.4 # Set Surplus Production curve inflection point
-  #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>  
+  if(s==2) SELECT = FALSE # Reduce JABBA-Select to a Bayesian Pella-Tomlinson
 ```
 
 ### Read input data files
@@ -177,68 +144,29 @@ for(s in 1:3){
 Here, the user can specify if the `se` file is available by setting \`SE.I = TRUE' We advice to always check if all csv files were correctly read-in.
 
 ``` r
-#--------------------------------------------------
-# Read csv files
-#--------------------------------------------------
-  
-  # Use SEs from csv file for abudance indices (TRUE/FALSE)
-  SE.I = TRUE
-  
+
+  #--------------------------------------------------
+  # Read csv files
+  #--------------------------------------------------
   # Load assessment data
   catch = read.csv(paste0(File,"/",assessment,"/catch",assessment,".csv"))
   cpue = read.csv(paste0(File,"/",assessment,"/cpue",assessment,".csv"))#
   
+  # Use SEs from csv file for abudance indices (TRUE/FALSE)
+  SE.I = TRUE
   if(SE.I ==TRUE){
-    se =  read.csv(paste0(File,"/",assessment,"/se",assessment,".csv"))
+    se = read.csv(paste0(File,"/",assessment,"/se",assessment,".csv"))
   }
-  
-  head(cpue)
-  head(catch)
-```
-
-### Input data manipulation
-
-This section is optional. For the SWO\_SA example, we use this section to manipulate the input `cpue` and `se` data for scenarios 1-3. For sceanarios 2-3, we remove the BRA\_LL1 series. For the base-case scenario 3, we also use seperate time series (time-blocks) for Japan (JP\_LL1 & JP\_LL2) and Spain (SP\_LL1 & SP\_LL2), which we merge back into one index for JP\_1 and on for SP\_LL1 for scenarios 1-2. If the `se` input is provided, the same munipulations must be applied as for `cpue`.Again, always check if the manilupations were correctly applied.
-
-JABBA provides provides the option to use a single averaged CPUE index instead of the individual abundance indices (see *2.5.1. State-Space model for averaging of abundance indices* in Winker et al, 2018). This feature can be activated by setting `meanCPUE = TRUE`.
-
-``` r
-  #--------------------------------------------------
-  # option to exclude CPUE time series or catch year
-  #--------------------------------------------------
-  
-  if(s<3){ # Combine SPAIN and JAPAN
-    cpue[,4] = apply(cpue[,4:5],1,mean,na.rm=TRUE)
-    cpue[,6] = apply(cpue[,6:7],1,mean,na.rm=TRUE)
-    
-    cpue = cpue[,-c(5,7)] 
-    se[,4] = apply(se[,4:5],1,mean,na.rm=TRUE)
-    se[,6] = apply(se[,6:7],1,mean,na.rm=TRUE)
-    
-    se = se[,-c(5,7)]
-    cpue[!is.finite(cpue[,4]),4]=NA
-    cpue[!is.finite(cpue[,5]),5]=NA
-    se[!is.finite(se[,4]),4]=NA
-    se[!is.finite(se[,5]),5]=NA
-    
-  }
-  
-  # Remove BrazilI
-  if(s>1){
-    cpue = cpue[,-c(2)]
-    se = se[,-c(2)]
-  }
-
-  
   names(cpue)
-  ncol(catch)
-  ncol(cpue)
-
-  #------------------------------------------------------
-  # Option use mean CPUE from state-space cpue averaging
-  #-----------------------------------------------------
-  meanCPUE = FALSE
+  names(catch)
+  # Read select csv
+  select = read.csv(paste0(File,"/",assessment,"/select",assessment,".csv"))
+  
+  # Read selex (selectivity) csv
+  selex = read.csv(paste0(File,"/",assessment,"/selex",assessment,".csv"))
+  
 ```
+
 
 ### Prior and Process variance settings
 
