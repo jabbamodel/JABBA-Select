@@ -59,8 +59,9 @@ JABBA-SELECT is formulated to accommodate abundance indices from multiple source
 JABBA-Select aims to account for the effects of different selectivity patterns on the stock's surplus production and arising distortions between spawing biomass (SB) and exploitable biomass (EB) when fitting the CPUE data. The selectivity functions under consideration are summarized in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) .csv file. The JABBA selex function provides the option to specify a 2-parameter logistic as well as a 5-parameter piece-wise dome-shaped selectivity curve, with a logistic function for the ascending limb and the descending limb described by the mean and CV of a half-normal distribution (Huynh et al., 2018). 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/SELEX_SWOss3.png">
-<br><br>
-The KOBSim example only focuses on the simple 2-parameter logistic function, which requires the lengths where 50% and 95% of fish are retained as catch. The early and recent selectivity functions are referenced a S1 and S2, respectively. The first column in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) file lists the 5 parameters SL50, SL95 (anscending logistic), SL.desc (mean of double-normal), CV.desc (rate of descent) and min.desc. The next columns provide the parameter values. If the latter three parameters (SL.desc, CV.desc, min.desc) are left blank or provided as `NA`, the selex function automically reduces to a logistic. 
+<br>
+<br>
+The KOBSim example only considers on the simple 2-parameter logistic function, which requires the lengths where 50% and 95% of fish are retained as catch. The early and recent selectivity functions are referenced a S1 and S2, respectively. The first column in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) file lists the 5 parameters SL50, SL95 (anscending logistic), SL.desc (mean of double-normal), CV.desc (rate of descent) and min.desc. The next columns provide the parameter values. If the latter three parameters (SL.desc, CV.desc, min.desc) are left blank or provided as `NA`, the selex function automically reduces to a logistic. 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/selex.png" width="900" height="200">
 
@@ -72,8 +73,23 @@ JABBA-Select requires to assign a selection function to each Catch and CPUE time
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/select.png" width="900" height="200">
 
 Column `Fleet.ID` specifies an index of unique numbers for each Catch and CPUE time series, where Catch series must be listed first, followed by CPUE indices. Column `Fleet` specifies the name labels for of each Catch and CPUE series corresponding column names chosen by the user in the [`catch`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) and the
-[`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input files. The column `Selectivity` assigns the respective `Fleet` to a selectivity function provided in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) file. In this example, the catches of fleet S1 and S2 are assigned to the first and second listed selectivity functions (S1 & S2) in in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) by inputting 1 and 2, respectively. The CPUE indices (A1.S1, A1.S2, A2.S1, A2.S2) are then assigned in the same way. Column `CPUE.units` specify if CPUE is in weight = 1 or number = 0. Note that catch must be in weight. Column `Catch` specifies whether the time series represents catch, if TRUE, or cpue, if FALSE. Finally, column `q` assigns a estimable catchability coefficients each cpue index or 0 to catch. In this example index A1.S1 and A1.S2 are for example assumed to have a common q = 1, but different selectivity function due to the change in size limits.
-   
+[`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input files. The column `Selectivity` assigns the respective `Fleet` to a selectivity function provided in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) file. In this example, the catches of fleet S1 and S2 are assigned to the first and second listed selectivity functions (S1 & S2) in in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) by inputting 1 and 2, respectively. The CPUE indices (A1.S1, A1.S2, A2.S1, A2.S2) are then assigned in the same way. Column `CPUE.units` specify if CPUE is in weight = 1 or number = 0. Note that catch must be in weight. Column `Catch` specifies whether the time series represents catch, if TRUE, or cpue, if FALSE. Finally, column `q` assigns a estimable catchability coefficients each cpue index or 0 to catch. 
+
+
+``` r
+#---------------------------------------------------------------------
+# Set Working directory file where to store the results
+#---------------------------------------------------------------------
+File = "C:/Work/Research/GitHub/JABBA-SELECT/KOBsim_example"
+# Set working directory for JABBA-Select R source code
+JABBA.file = "C:/Work/Research/GitHub/JABBA-SELECT"
+# JABBA-Select Version
+version = "v1.1"
+# Set Assessment file: assement folder within File that includes .csv input files
+assessment = "KOBSim"
+
+```
+
 All input files have to be saved in a folder that is named after the `assessment`, here `/KOBSim`.
 
 In the Prime file:
@@ -130,8 +146,7 @@ JABBA-Select makes it easy to run alternative scenarios in a loop. For this purp
 
 `Scenarios = c(paste0("Scenario",1:10))`
 
-but individual names may be specified as well, e.g. `Scenarios = c("Run_high_h","Run_medium_h","Run_low_h")`. JABBA-Select automatically creates a folder for each scenario, including the `Input` and `output` subfolders. 
-
+but individual names may be specified as well, e.g. `Scenarios = c("Run_high_h","Run_medium_h","Run_low_h")`. In this example the Prime file is set up to run the full SELECT model, followed by a reduced Pella-Tomlinson model, which does not account for selectivity by assuming that exploitable biomass equals spawning biomass (SB = EB). 
 ``` r
 Scenarios = c("SELECT","Pella")
 s=1
@@ -140,6 +155,8 @@ for(s in 1:length(Scenarios)){
   Scenario = Scenarios[s] 
   if(s==2) SELECT = FALSE # Reduce JABBA-Select to a Bayesian Pella-Tomlinson
 ```
+JABBA-Select automatically creates a folder for each scenario, including the `Input` and `output` subfolders. 
+<br>
 
 ### Read input data files
 
@@ -170,13 +187,75 @@ Here, the user can specify if the `se` file is available by setting \`SE.I = TRU
 ```
 
 
-### Prior and Process variance settings
+### Catchability, Observation and Process variance settings
 
-Please see section *2.3.2. Prior specification* in Winker et al. (2008) for details.
+Like JABBA, JABBA-SELECT allows the separation of the observation variance into three components: (1) the squared externally estimable observation error (`SE`), that is read-in via [`se`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/seKOBsim.csv) csv file, (2) a fixed additional input variance denoted in the R code as `fixed.obsE`, and (3) estimable variance, which is envoked if `sigma.est = TRUE`, where the default prior option for assumes an uninformative inverse-gamma distribution with both gamma scaling parameters set to 0.001. This variance can be estimated individually for each abudance index <i> i </i> for goups of indices or as single quantity common to all indices. All three variance components are additive and can be switched on or off in any combination to provide flexible data-weighting options. Please also see section  *2.3.2. Prior specification* in [Winker et al. (2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) for additional details.
+
+The estimable observation variance *σ*<sub>*e**s**t*, *i*</sub><sup>2</sup> can be specified to be estimated: (1) for each CPUE index, (2) in groups or (3) as the same quantatity for all indices. For (1), simply provide a vector of unique integer in order for each index, e.g. `sets.var = select$q[select$CPUE]`. For (2), `set.var =` can be specified by grouping similar indices, e.g. `sets.var = c(1,1,2,2,3)`. For (3), simply provide the indentifier 1 for all indices, e.g. `sets.var = rep(1,ncol(cpue)-1)`. The exact same principles apply for changing the assigned *q*<sub> *i*</sub> for index *i*. For example for option (1), one can simply specify `sets.var = 1:length(select$q[select$CPUE])`. <br>
+
+In this example index A1.S1 and A1.S2 are for example assumed to have a common q = 1, but different selectivity function due to the change in size limits, whereas A1.S1 and A2.S1, which were indipendtly generated from e.g. two regions, are assigned common selectivity functions but different q's. 	 
+
+``` r
+
+ #--------------------------------------------------------------
+ # Determine estimation for catchability q and observation error 
+ #--------------------------------------------------------------
+    
+    # Assign q to CPUE from select file
+    sets.q = select$q[select$CPUE]
+    if(SELECT==F) sets.q = 1:length(select$q[select$CPUE])
+    
+    # Assign additional observation variances to indices
+    sets.var = select$q[select$CPUE] # assigns indices with same obervation variance 
+    
+    #To Estimate additional observation variance set sigma.est = TRUE
+    sigma.est = c(TRUE,FALSE)[1]
+    # As option for data-weighing
+    # minimum additional observation error for each variance set (optional choose 1 value for both)
+    fixed.obsE = 0.01
+
+```
+
+``` r
+ #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
+    # Process Error
+    #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
+    
+    #------------------------------------------
+    #Estimate set sigma.proc == True
+    sigma.proc = TRUE
+    proc.dev.all=1 # start process error in year 1
+    #------------------------------------------
+    if(sigma.proc == TRUE){
+      proc.type = c("igamma","lnorm")[1] # choose 1: inverse-gamma or 2: lognormal
+      
+      if(proc.type=="lnorm"){
+        pr.proc = c(log(0.08),0.2) # Option for lognormal process error
+      }
+      if(proc.type=="igamma"){
+        #pr.proc = c(0.001,0.001) # Option for inverse-gamma prior
+        #pr.proc = c(10,0.1)
+        pr.proc = c(0.001,0.001)
+        gamma.check = 1/rgamma(1000,pr.proc[1],pr.proc[2]) # Process error check
+        # check mean process error + CV
+        mu.proc = sqrt(mean(gamma.check)); CV.proc = sd(sqrt(gamma.check))/mean(sqrt(gamma.check))
+        # check CV
+        round(c(mu.proc,CV.proc),3)
+        quantile(sqrt(gamma.check),c(0.1,0.9))
+      }  
+    }else{
+      sigma.proc = 0.05 #IF Fixed (sigma.est = FALSE): typicallly 0.05-0.15 (see Ono et al. 2012)
+      
+    }
+
+```
 
 Most prior settings provide more than one option. For example, if the prior for K is meant to be specified as a lognormal prior set `K.dist = c("lnorm","range")[1]`, whereas for a range set `K.dist = c("lnorm","range")[2]`. If the prior for K is specified as lognormal, e.g. `K.prior = c(200000,1)`, it requires the untransformed mean K and the assumed CV. If the prior for K is specified as range, it requires the assumed minum and maximum values, e.g. `K.prior = c(15000,1500000)`.
 
 The r prior provides an additional option, in that it can be specified as a generic resiliance category *Very low, Low, Medium* or *High*, such as provided by [FishBase](www.FishBase.org). This requires specifying `K.dist = c("lnorm","range")[2]` (i.e. as a range) and then setting the `K.prior` equal to one of the above reliance categories, e.g. `K.prior = "Low"`.
+
+
+
 
 ``` r
   #------------------------------------------------
@@ -238,6 +317,39 @@ The r prior provides an additional option, in that it can be specified as a gene
     sigma.proc = 0.07 #IF Fixed: typicallly 0.05-0.15 (see Ono et al. 2012)
   }
 ```
+
+
+ #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
+    # Process Error
+    #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
+    
+    #------------------------------------------
+    #Estimate set sigma.proc == True
+    sigma.proc = TRUE
+    proc.dev.all=1 # start process error in year 1
+    #------------------------------------------
+    if(sigma.proc == TRUE){
+      proc.type = c("igamma","lnorm")[1] # choose 1: inverse-gamma or 2: lognormal
+      
+      if(proc.type=="lnorm"){
+        pr.proc = c(log(0.08),0.2) # Option for lognormal process error
+      }
+      if(proc.type=="igamma"){
+        #pr.proc = c(0.001,0.001) # Option for inverse-gamma prior
+        #pr.proc = c(10,0.1)
+        pr.proc = c(0.001,0.001)
+        gamma.check = 1/rgamma(1000,pr.proc[1],pr.proc[2]) # Process error check
+        # check mean process error + CV
+        mu.proc = sqrt(mean(gamma.check)); CV.proc = sd(sqrt(gamma.check))/mean(sqrt(gamma.check))
+        # check CV
+        round(c(mu.proc,CV.proc),3)
+        quantile(sqrt(gamma.check),c(0.1,0.9))
+      }  
+    }else{
+      sigma.proc = 0.05 #IF Fixed (sigma.est = FALSE): typicallly 0.05-0.15 (see Ono et al. 2012)
+      
+    }
+
 
 Both catchability *q* and the estimable observation variance *σ*<sub>*e**s**t*, *i*</sub><sup>2</sup> can be specified to be estimated: (1) for each CPUE index, (2) in groups or (3) as the same quantatity for all indices. For (1), simply provide a vector of unique integer in order for each index, e.g. `sets.q = 1:(ncol(cpue)-1)`. For (2), `set.q =` can be specified by grouping similar indices, e.g. `set.q = c(1,1,2,2,3)`. For (3), simply provide the indentifier 1 for all indices, e.g. `sets.q = rep(1,ncol(cpue)-1)`. The exact same principles apply for assigning *σ*<sub>*e**s**t*, *i*</sub><sup>2</sup> to individual indices *i*, i.e. `sets.var = 1:(ncol(cpue)-1)` for case (1).
 
