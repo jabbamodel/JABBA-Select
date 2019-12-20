@@ -297,10 +297,10 @@ The resulting relationships of length-at-age, weight-at-length, weight-at-age an
 
 In addition, JABBA-Select permits to specify growth and length-weight functions to be sex specific by adding `nsexes = 2` (`nsexes = 1` is default). This then requires spefifyinh two values for each paramter: the first for females and the second for males (see our more complext worked example for North Atlantic swordfish [SWOss3](https://github.com/jabbamodel/JABBA-Select/tree/master/SWOss3)). 
 
+``` r
 #---------------------------------------------------------------
 # STOCK PARAMETERS for prior generation Hmsy as a fuction of r
 #---------------------------------------------------------------
-``` r
 minage <- 0  																						
 maxage <- 25
 PlusGroup = TRUE
