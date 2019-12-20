@@ -155,7 +155,7 @@ for(s in 1:length(Scenarios)){
   Scenario = Scenarios[s] 
   if(s==2) SELECT = FALSE # Reduce JABBA-Select to a Bayesian Pella-Tomlinson
 ```
-JABBA-Select automatically creates a folder for each scenario, including the `Input` and `output` subfolders. 
+JABBA-Select automatically creates a folder for each scenario, including the [`Input`](https://github.com/jabbamodel/JABBA-Select/tree/master/KOBsim_example/KOBsim/SELECT_JS/Input) and [`Output`](https://github.com/jabbamodel/JABBA-Select/tree/master/KOBsim_example/KOBsim/SELECT_JS/Output) subfolders, where all default plots, .csv and .rdata files are saved automatically depending on the choices of Basic Settings (see above). 
 <br>
 
 ### Read input data files
@@ -187,13 +187,13 @@ Here, the user can specify if the `se` file is available by setting \`SE.I = TRU
 ```
 
 
-### Catchability, Observation and Process variance settings
+### Catchability, Observation Error and Process Error settings
 
 Like JABBA, JABBA-SELECT allows the separation of the observation variance into three components: (1) the squared externally estimable observation error (`SE`), that is read-in via [`se`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/seKOBsim.csv) csv file, (2) a fixed additional input variance denoted in the R code as `fixed.obsE`, and (3) estimable variance, which is envoked if `sigma.est = TRUE`, where the default prior option for assumes an uninformative inverse-gamma distribution with both gamma scaling parameters set to 0.001. This variance can be estimated individually for each abudance index <i> i </i> for goups of indices or as single quantity common to all indices. All three variance components are additive and can be switched on or off in any combination to provide flexible data-weighting options. Please also see section  *2.3.2. Prior specification* in [Winker et al. (2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) for additional details.
 
 The estimable observation variance *σ*<sub>*e**s**t*, *i*</sub><sup>2</sup> can be specified to be estimated: (1) for each CPUE index, (2) in groups or (3) as the same quantatity for all indices. For (1), simply provide a vector of unique integer in order for each index, e.g. `sets.var = select$q[select$CPUE]`. For (2), `set.var =` can be specified by grouping similar indices, e.g. `sets.var = c(1,1,2,2,3)`. For (3), simply provide the indentifier 1 for all indices, e.g. `sets.var = rep(1,ncol(cpue)-1)`. The exact same principles apply for changing the assigned *q*<sub> *i*</sub> for index *i*. For example for option (1), one can simply specify `sets.var = 1:length(select$q[select$CPUE])`. <br>
 
-In this example index A1.S1 and A1.S2 are for example assumed to have a common q = 1, but different selectivity function due to the change in size limits, whereas A1.S1 and A2.S1, which were indipendtly generated from e.g. two regions, are assigned common selectivity functions but different q's. 	 
+In this example index A1.S1 and A1.S2 are for example assumed to have a common q = 1, but different selectivity function due to the change in size limits, whereas A1.S1 and A2.S1, which were indipendtly generated from e.g. two regions, are assigned common selectivity functions but different *q*'s. 	 
 
 ``` r
 
@@ -215,9 +215,12 @@ In this example index A1.S1 and A1.S2 are for example assumed to have a common q
     fixed.obsE = 0.01
 
 ```
+The process variation on log(SB) can be chosen to be estimable `sigma.proc = TRUE` or fixed `sigma.proc = FALSE`. If `sigma.proc = TRUE`, the user has the option to specify a prior for the estimable process variance as inverse-gamma distribution `proc.type = c("igamma","lnorm")[1]` (see [Millar & Meyer 2000](https://www.jstor.org/stable/2680768?seq=1)) or a process error prior (not variance) as lognormal distribution `proc.type = c("igamma","lnorm")[1]`, which can be for example derived of simulation studies ([Winker 2018](http://webcms.uct.ac.za/sites/default/files/image_tool/images/302/pub/2018/IWS2018/Line_Fish/MARAM_IWS2018_Linefish_P3%20-%20SPM_ProcessErrors.docx)). The defaul setting for inverse-gamma is an uninformative approximation of the Jeffrey's prior with `pr.proc = c(0.001,0.001)`. It is probably more intuitive forumalte informative lognormal priors for the process error `pr.proc = c(log(mu),CV)`, where range between 0.05 (long generation times) and 0.15 (short generation times) are thought covering to capture the plausibe ranges (see e.g. [Winker 2018](http://webcms.uct.ac.za/sites/default/files/image_tool/images/302/pub/2018/IWS2018/Line_Fish/MARAM_IWS2018_Linefish_P3%20-%20SPM_ProcessErrors.docx)). A concservative starting value for an informative inverse-gamma prior would `pr.proc = c(4,0.01)` (c.f. [Millar & Meyer 2000](https://www.jstor.org/stable/2680768?seq=1); [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845)). The provided R code in this example Prime file includes some simple checks for approximating the mean and CV given the choice of scale and shape parameters `pr.proc = c(shape,scale)` for the inverse-gamma distribution. 
+
+If the choice is to fix the process error by setting `sigma.proc = FALSE`, the expected mean specified by e.g. `sigma.proc = 0.1`. Note that short and/or noisy CPUE time series may not permit to estimate the process error reliably due to lack of contrast and information in the data. In such cases, it is recommended to initially develop the JABBA-Select with fixed process error and possibly explore option to use prior once the model runs stable.
 
 ``` r
- #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
+    #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
     # Process Error
     #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
     
@@ -244,7 +247,7 @@ In this example index A1.S1 and A1.S2 are for example assumed to have a common q
         quantile(sqrt(gamma.check),c(0.1,0.9))
       }  
     }else{
-      sigma.proc = 0.05 #IF Fixed (sigma.est = FALSE): typicallly 0.05-0.15 (see Ono et al. 2012)
+      sigma.proc = 0.1 #IF Fixed (sigma.est = FALSE): typicallly 0.05-0.15 (see Ono et al. 2012)
       
     }
 
