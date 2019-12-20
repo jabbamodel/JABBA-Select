@@ -253,133 +253,71 @@ If the choice is to fix the process error by setting `sigma.proc = FALSE`, the e
 
 ```
 
-Most prior settings provide more than one option. For example, if the prior for K is meant to be specified as a lognormal prior set `K.dist = c("lnorm","range")[1]`, whereas for a range set `K.dist = c("lnorm","range")[2]`. If the prior for K is specified as lognormal, e.g. `K.prior = c(200000,1)`, it requires the untransformed mean K and the assumed CV. If the prior for K is specified as range, it requires the assumed minum and maximum values, e.g. `K.prior = c(15000,1500000)`.
+### Life History Parameters 
 
-The r prior provides an additional option, in that it can be specified as a generic resiliance category *Very low, Low, Medium* or *High*, such as provided by [FishBase](www.FishBase.org). This requires specifying `K.dist = c("lnorm","range")[2]` (i.e. as a range) and then setting the `K.prior` equal to one of the above reliance categories, e.g. `K.prior = "Low"`.
-
-
-
+JABBA-Select requires basic life history parameters as input the [Age-Structured Equilibbrium Model (ASEM) function](link here), describing growth, weight-lenght, maturation, longivity, natural mortality and the spawning-recruitment relationship recruitment 
 
 ``` r
-  #------------------------------------------------
-  # Prior for unfished biomass K
-  #------------------------------------------------
-  # The option are: 
-  # a) Specify as a lognormal prior with mean and CV 
-  # b) Specify as range to be converted into lognormal prior
-  
-  K.dist = c("lnorm","range")[1]
-  
-  # if lnorm use mean and CV; if range use lower,upper bound
-  K.prior = c(200000,1) 
-  
-  #-----------------------------------------------------------
-  # mean and CV and sd for Initial depletion level P1= SB/SB0
-  #-----------------------------------------------------------
-  # Set the initial depletion prior B1/K 
-  # To be converted into a lognormal prior (with upper bound at 1.1)
-  
-  psi.dist= c("lnorm","beta")[1]
-  # specify as mean and CV 
-  psi.prior = c(1,0.25) 
-  
-  #----------------------------------------------------
-  # Determine r prior
-  #----------------------------------------------------
-  # The option are: 
-  # a) Specifying a lognormal prior 
-  # b) Specifying a resiliance category after Froese et al. (2017; CMSY)
-  # Resilience: "Very low", "Low", "Medium", High" (requires r.range = TRUE)
-  
-  # use [1] lognormal(mean,stdev) or [2] range (min,max) or
-  r.dist = c("lnorm","range")[1] 
-  
-  r.prior = c(0.42,0.37) 
-  
-  #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
-  # Process Error
-  #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
-  #Estimate set sigma.proc == True
-  sigma.proc = TRUE
-  # Determines if process error deviation are estimated for all years (TRUE)  
-  # or only from the point the first abundance index becomes available (FALSE)
-  proc.dev.all = FALSE 
-  #------------------------------------------
-  if(sigma.proc == TRUE){
-    igamma = c(4,0.01) #specify inv-gamma parameters
+    #---------------------------------------------------------------
+    # STOCK PARAMETERS for prior generation Hmsy as a fuction of r
+    #---------------------------------------------------------------
+    # Age
+    minage <- 0  																						
+    maxage <- 20
+    plusgroup = c(FALSE,TRUE)[1] 
+    #Growth paramters (von Bertalnffy)
+    Linf <- 1372
+    kappa <- 0.115
+    t0 <-  -0.815
     
-    # Process error check
-    gamma.check = 1/rgamma(1000,igamma[1],igamma[2])
-    # check mean process error + CV
-    mu.proc = sqrt(mean(gamma.check)); CV.proc =    sd(sqrt(gamma.check))/mean(sqrt(gamma.check))
+    #Length-weight
+    aW <- 0.000006 																						
+    bW <- 3.07
     
-    # check CV
-    round(c(mu.proc,CV.proc),3)
-    quantile(sqrt(gamma.check),c(0.1,0.9))
-  }else{
-    sigma.proc = 0.07 #IF Fixed: typicallly 0.05-0.15 (see Ono et al. 2012)
-  }
+    # Maturity 
+    maturity = c(2.5,2.6,1) # knife edge age-3 # a single value is taken as age (knife-edge) 
+    #c(Lm50,Lm95,0) # two values are taken as length-based: Lm50 and Lm95 
+    
+    # Natural mortality estimate (affects Hmsy)
+    M = 0.18
+    CV.M = 0.25 
+    
+    # steepness B&H SSR (effects Hmsy and determines SBmsy/SB0)
+    h = 0.8
+    CV.h = 0.1
+    
 ```
+Growth is decribed by the von Bertalnffy Growth Function (VBGF). The maximum age can be treated a plus group `plusgroup = c(FALSE,TRUE)[2]` or as *de facto* maximum age  `plusgroup = c(FALSE,TRUE)[1]`. Maturity as logistic a logistic function that can be either specified  by lengths where 50% (Lm50) and 95% (Lm95%) maturity is attained `maturity = c(Lm50,Lm95,0)` or the ages where 50% (Am50) and 95% (Am95%) maturity is attained `maturity = c(Am50,Am95,1)`, which is selected by choosing 0 for length, and 1 for age as the third value when specifying `maturity`. Uncertainty can be addmitted by specifying CVs for two key paramters natural mortality *M* (assumed to be age-independent) and the steepness parameter *h* of the Beverton and Holt Spawner-Recruitment Relationship.
 
+The resulting relationships of length-at-age, weight-at-length, weight-at-age and maturity-at-length relative selectivity-at-length are shown in the `StockFunctions_` plot that is saved in the [`Input`](https://github.com/jabbamodel/JABBA-Select/tree/master/KOBsim_example/KOBsim/SELECT_JS/Input) folder.
 
- #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
-    # Process Error
-    #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
-    
-    #------------------------------------------
-    #Estimate set sigma.proc == True
-    sigma.proc = TRUE
-    proc.dev.all=1 # start process error in year 1
-    #------------------------------------------
-    if(sigma.proc == TRUE){
-      proc.type = c("igamma","lnorm")[1] # choose 1: inverse-gamma or 2: lognormal
-      
-      if(proc.type=="lnorm"){
-        pr.proc = c(log(0.08),0.2) # Option for lognormal process error
-      }
-      if(proc.type=="igamma"){
-        #pr.proc = c(0.001,0.001) # Option for inverse-gamma prior
-        #pr.proc = c(10,0.1)
-        pr.proc = c(0.001,0.001)
-        gamma.check = 1/rgamma(1000,pr.proc[1],pr.proc[2]) # Process error check
-        # check mean process error + CV
-        mu.proc = sqrt(mean(gamma.check)); CV.proc = sd(sqrt(gamma.check))/mean(sqrt(gamma.check))
-        # check CV
-        round(c(mu.proc,CV.proc),3)
-        quantile(sqrt(gamma.check),c(0.1,0.9))
-      }  
-    }else{
-      sigma.proc = 0.05 #IF Fixed (sigma.est = FALSE): typicallly 0.05-0.15 (see Ono et al. 2012)
-      
-    }
+<br>
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/StockFunctions_KOBSim.png" width="900">
+<br>
 
+In addition, JABBA-Select permits to specify growth and length-weight functions to be sex specific by adding `nsexes = 2` (`nsexes = 1` is default). This then requires spefifyinh two values for each paramter: the first for females and the second for males (see our more complext worked example for North Atlantic swordfish [SWOss3](https://github.com/jabbamodel/JABBA-Select/tree/master/SWOss3)). 
 
-Both catchability *q* and the estimable observation variance *σ*<sub>*e**s**t*, *i*</sub><sup>2</sup> can be specified to be estimated: (1) for each CPUE index, (2) in groups or (3) as the same quantatity for all indices. For (1), simply provide a vector of unique integer in order for each index, e.g. `sets.q = 1:(ncol(cpue)-1)`. For (2), `set.q =` can be specified by grouping similar indices, e.g. `set.q = c(1,1,2,2,3)`. For (3), simply provide the indentifier 1 for all indices, e.g. `sets.q = rep(1,ncol(cpue)-1)`. The exact same principles apply for assigning *σ*<sub>*e**s**t*, *i*</sub><sup>2</sup> to individual indices *i*, i.e. `sets.var = 1:(ncol(cpue)-1)` for case (1).
-
+#---------------------------------------------------------------
+# STOCK PARAMETERS for prior generation Hmsy as a fuction of r
+#---------------------------------------------------------------
 ``` r
-  #--------------------------------------------------------------
-  # Determine estimation for catchability q and observation error 
-  #--------------------------------------------------------------
-  # Assign q to CPUE
-  sets.q = 1:(ncol(cpue)-1) 
-  
-  #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
-  # Observation Error
-  #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
-  
-  #To Estimate additional observation variance set sigma.add = TRUE
-  sigma.est = TRUE
-  
-  # Series
-  sets.var = 1:(ncol(cpue)-1) # estimate individual additional variace
-  
-  # As option for data-weighing
-  # minimum fixed observation error for each variance set (optional choose 1 value for both)
-  fixed.obsE = c(0.2) # Important if SE.I is not availble
-  
-  # Total observation error: TOE = sqrt(SE^2+sigma.est^2+fixed.obsE^2)
-  #--------------------------------------------
+minage <- 0  																						
+maxage <- 25
+PlusGroup = TRUE
+# Number of sexes order Female and Males (this model is sex-structured)
+nsexes = 2
+# VBGF parameters
+Linf <- c(290.1,214.2)
+kappa <- c(0.147,0.266)
+t0 <- c(-1.163, -0.6)
 ```
+
+If `nsexes = 2`, the maturity function and spawning biomass (SB) is speficific to females.
+
+<br>
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/SWOselect_JS/Input/StockFunctions_SWOss3.png" width="900">
+<br>
+
 
 ### Projections under constant Total Allowable Catch (TAC)
 
