@@ -6,7 +6,7 @@ henning.winker@gmail.com
 
 ### Getting started
 
-A JABBA-Select model is desinged to be set up in a R 'Prime' file, from which the JABBA-Select source code [`JABBA_SELECTv1.1.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/JABBA_SELECTv1.1.R) via the `source()` function. 
+A JABBA-Select model is designed to be set up in a R 'Prime' file, from which the JABBA-Select source code [`JABBA_SELECTv1.1.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/JABBA_SELECTv1.1.R) via the `source()` function. 
 
 This tutorial explains the main segments of the Prime file setup using the simulation example for South African silver kob [`JABBA_SELECT_prime_KOBsim.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/JABBA_SELECT_prime_KOBsim.R) presented in [Winker et al. (2020)](https://www.sciencedirect.com/science/article/pii/S0165783619302103). 
 
@@ -38,7 +38,7 @@ library(mvtnorm);library(scales)
 
 The simulation example of Silver Kob is used to illustrate the basic steps of fitting a JABBA-Select model using the Prime file [`JABBA_SELECT_prime_KOBsim.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/JABBA_SELECT_prime_KOBsim.R). 
 
-The population dynamics of silver kob are those assumed in Winker et al. (2019). The availbe data are catch and catch-per-unit effort (CPUE) time series over a period of 40 years. A simple logistic selectivity function is assumed, which is described by the lengths where 50% and 95% of fish are retained as catch. Length-at-50%-selectivity increased after year 25 to simulate an increase in miminum size limit regulations.  Here, two CPUE indices are simulated, which are associated with different standard errors catchability q (different scale) to represent, for example, CPUE indices from two areas that are sampled with varying precision ([Winker et al. 2020)](https://www.sciencedirect.com/science/article/pii/S0165783619302103).
+The population dynamics of silver kob are those assumed in [Winker et al. (2020)](https://www.sciencedirect.com/science/article/pii/S0165783619302103). The available data are catch and catch-per-unit effort (CPUE) time series over a period of 40 years. A simple logistic selectivity function is assumed, which is described by the lengths where 50% and 95% of fish are retained as catch. Length-at-50%-selectivity increased after year 25 to simulate an increase in minimum size limit regulations.  Here, two CPUE indices are simulated, which are associated with different standard errors catchability q (different scale) to represent, for example, CPUE indices from two areas that are sampled with varying precision ([Winker et al. 2020)](https://www.sciencedirect.com/science/article/pii/S0165783619302103).
 
 
 ### Input files
@@ -49,12 +49,12 @@ The four (or five) csv files are named such that the type classifier `catch`, `c
 
 
 ##### <i>1.  Catch </i>
-The [`catch.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) input file contains the time series of year and catch by weight, seperated fisheries that operate with selectivity patterns. Missing catch years or catch values are not allowed. In this simple example of [`JABBA_SELECT_prime_KOBsim.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/JABBA_SELECT_prime_KOBsim.R), fishing selectivity changed for the entire fleet between year 25 and 26.
+The [`catch.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) input file contains the time series of year and catch by weight, separated fisheries that operate with selectivity patterns. Missing catch years or catch values are not allowed. In this simple example of [`JABBA_SELECT_prime_KOBsim.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/JABBA_SELECT_prime_KOBsim.R), fishing selectivity changed for the entire fleet between year 25 and 26.
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/Catches_KOBSim.png" width="900" >
 <br>
 
-In the more complex Atlantic Swordfish example [SWOss3](https://github.com/jabbamodel/JABBA-Select/tree/master/SWOss3) the catches seperate into eleven fleets, fishing with different selectivity pattern (see below). 
+In the more complex Atlantic Swordfish example [SWOss3](https://github.com/jabbamodel/JABBA-Select/tree/master/SWOss3) the catches are separated into eleven fleets that are assumed to fish with different selectivity patterns (see below). 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/SWOselect_JS/Input/Catches_SWOss3.png" width="900" >
 <br>
@@ -62,7 +62,7 @@ In the more complex Atlantic Swordfish example [SWOss3](https://github.com/jabba
 
 
 ##### <i>2. CPUE </i>
-JABBA-SELECT is formulated to accommodate abundance indices from multiple sources (i.e., fleets) in a single [`cpue.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) file, which contains all considered abundance indices. The first column of the [`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input is year, which must match the range of years provided in the [`catch.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) file. If a CPUE index is affected by a change selectivity, it has be seperately captured in two columns. In contrast to the [`catch.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) input, missing abundance index values are allowed, such that different abundance indices may correspond to smaller portions of the catch time series. Optionally, an additional [`se.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/seKOBsim.csv) input can be passed onto JABBA, containing standard error estimates associated with the abundance indices on a log scale. The [`se.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/seKOBsim.csv) input file is structurally identical to the [`cpue.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input. Alternatively, this feature can be used to apply different weighting to individual abundance indices by assigning varying coefficients of variation (CV) to each time series. If such weighting is implemented, it is advised that the CV chosen for each indexed year approximates the observed standard error on the log scale, such that the data weights are congruent with expectations as to how well the model should fit these data [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845).
+JABBA-SELECT is formulated to accommodate abundance indices from multiple sources (i.e., fleets) in a single [`cpue.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) file, which contains all considered abundance indices. The first column of the [`cpue`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input is year, which must match the range of years provided in the [`catch.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) file. If a CPUE index is affected by a change selectivity, it has to be captured separately in two columns. In contrast to the [`catch.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/catchKOBsim.csv) input, missing abundance index values are allowed, such that different abundance indices may correspond to smaller portions of the catch time series. Optionally, an additional [`se.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/seKOBsim.csv) input can be passed onto JABBA, containing standard error estimates associated with the abundance indices on a log scale. The [`se.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/seKOBsim.csv) input file is structurally identical to the [`cpue.csv`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/cpueKOBsim.csv) input. Alternatively, this feature can be used to apply different weighting to individual abundance indices by assigning varying coefficients of variation (CV) to each time series. If such weighting is implemented, it is advised that the CV chosen for each indexed year approximates the observed standard error on the log scale, such that the data weights are congruent with expectations as to how well the model should fit these data [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845).
 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/CPUE_KOBSim_SELECT.png" width="900" >
@@ -70,12 +70,12 @@ JABBA-SELECT is formulated to accommodate abundance indices from multiple source
 
 
 ##### <i> 3. Selectivity functions </i>
-JABBA-Select aims to account for the effects of different selectivity patterns on the stock's surplus production and arising distortions between spawing biomass (SB) and exploitable biomass (EB) when fitting the CPUE data. The selectivity functions under consideration are summarized in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) .csv file. The JABBA selex function provides the option to specify a 2-parameter logistic as well as a 5-parameter piece-wise dome-shaped selectivity curve, with a logistic function for the ascending limb and the descending limb described by the mean and CV of a half-normal distribution (Huynh et al., 2018). 
+JABBA-Select aims to account for the effects of different selectivity patterns on the stock's surplus production and arising distortions between spawning biomass (SB) and exploitable biomass (EB) when fitting the CPUE data. The selectivity functions under consideration are summarized in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) .csv file. The JABBA selex function provides the option to specify a 2-parameter logistic as well as a 5-parameter piece-wise dome-shaped selectivity curve, with a logistic function for the ascending limb and the descending limb described by the mean and CV of a half-normal distribution (Huynh et al., 2018). 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/SELEX_SWOss3.png">
 <br>
 <br>
-The KOBSim example only considers on the simple 2-parameter logistic function, which requires the lengths where 50% and 95% of fish are retained as catch. The early and recent selectivity functions are referenced a S1 and S2, respectively. The first column in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) file lists the 5 parameters SL50, SL95 (anscending logistic), SL.desc (mean of double-normal), CV.desc (rate of descent) and min.desc. The next columns provide the parameter values. If the latter three parameters (SL.desc, CV.desc, min.desc) are left blank or provided as `NA`, the selex function automically reduces to a logistic. 
+The KOBSim example only considers on the simple 2-parameter logistic function, which requires the lengths where 50% and 95% of fish are retained as catch. The early and recent selectivity functions are referenced a S1 and S2, respectively. The first column in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) file lists the 5 parameters SL50, SL95 (ascending logistic), SL.desc (mean of double-normal), CV.desc (rate of descent) and min.desc. The next columns provide the parameter values. If the latter three parameters (SL.desc, CV.desc, min.desc) are left blank or provided as `NA`, the selex function automatically reduces to a logistic. 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/Figures/selex.png" width="900" height="200">
 
@@ -121,7 +121,7 @@ File = "C:/Work/Research/GitHub/JABBA-SELECT/KOBsim_example"
 JABBA.file = "C:/Work/Research/GitHub/JABBA-SELECT"
 # JABBA-Select Version
 version = "v1.1"
-# Set Assessment file: assement folder within File that includes .csv input files
+# Set Assessment file: assessment folder within File that includes .csv input files
 assessment = "KOBSim"
 
 ```
@@ -156,7 +156,7 @@ save.all = FALSE # (if TRUE, a very large R object of entire posterior is saved)
 
 ### Looping through scenarios
 
-JABBA-Select makes it easy to run alternative scenarios in a loop. For this purpose, a unique name has to be assgined to each scenario. For example, a generic option to do this for 10 alternative scenarios is:
+JABBA-Select makes it easy to run alternative scenarios in a loop. For this purpose, a unique name has to be assigned to each scenario. For example, a generic option to do this for 10 alternative scenarios is:
 
 `Scenarios = c(paste0("Scenario",1:10))`
 
@@ -174,7 +174,7 @@ JABBA-Select automatically creates a folder for each scenario, including the [`I
 
 ### Read input data files
 
-Here, the user can specify if the `se` file is available by setting \`SE.I = TRUE' We advice to always check if all csv files were correctly read-in.
+Here, the user can specify if the `se` file is available by setting \`SE.I = TRUE'. We advice to always check if all csv files were correctly read-in.
 
 ``` r
 
@@ -202,7 +202,7 @@ Here, the user can specify if the `se` file is available by setting \`SE.I = TRU
 
 ### Biomass priors 
 
-JABBA-Select requires two priors on Spawning Biomass (*SB*). The first is a lognormal for the unfished *SB*<sub>0</sub>, which should be typically speficified as vaguely as possible around some plauseble "guess". To this we suggest a CV of 100-200%. To minimize the influence of the choice and improve modelperformance, it adviced that the Posterior median should be always located to right of the highest density peak of the *SB*<sub>0</sub> prior distribution. A very small Prior-Posterior-Variance-Ratio (PPVR) is indicative for the estimate being minimally informaned by the choice of prior.
+JABBA-Select requires two priors relatated to Spawning Biomass (*SB*) levels. The first is a lognormal for the unfished *SB*<sub>0</sub>, which should be typically specified as vaguely as possible around some most plausible "guess". To do this, we suggest a CV of 100%-200%. To minimize the influence of the choice and improve model performance, it adviced that the Posterior median should be always located to right of the highest density peak of the *SB*<sub>0</sub> prior distribution. A very small Prior-Posterior-Variance-Ratio (PPVR) is indicative for the estimate being minimally informed by the choice of prior.
 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Output/Posteriors_KOBSim_SELECT.png" width="900">
@@ -242,11 +242,11 @@ JABBA-Select provides imposes “soft” boundary penalty on *SB* if P<sub>y</su
 ```
 ### Life History Parameters 
 
-JABBA-Select requires basic life history parameters as input the [Age-Structured Equilibbrium Model (ASEM) function](link here), describing growth, weight-lenght, maturation, longivity, natural mortality and the spawning-recruitment relationship recruitment 
+JABBA-Select requires basic life history parameters as input the [Age-Structured Equilibbrium Model (ASEM) function](link here), describing growth, weight-length, maturation, longevity, natural mortality and the spawning-recruitment relationship recruitment 
 
 ``` r
     #---------------------------------------------------------------
-    # STOCK PARAMETERS for prior generation Hmsy as a fuction of r
+    # STOCK PARAMETERS for prior generation Hmsy as a function of r
     #---------------------------------------------------------------
     # Age
     minage <- 0  																						
@@ -274,7 +274,7 @@ JABBA-Select requires basic life history parameters as input the [Age-Structured
     CV.h = 0.1
     
 ```
-Growth is decribed by the von Bertalnffy Growth Function (VBGF). The maximum age can be treated a plus group `plusgroup = c(FALSE,TRUE)[2]` or as *de facto* maximum age  `plusgroup = c(FALSE,TRUE)[1]`. Maturity as logistic a logistic function that can be either specified  by lengths where 50% (Lm50) and 95% (Lm95%) maturity is attained `maturity = c(Lm50,Lm95,0)` or the ages where 50% (Am50) and 95% (Am95%) maturity is attained `maturity = c(Am50,Am95,1)`, which is selected by choosing 0 for length, and 1 for age as the third value when specifying `maturity`. Uncertainty can be addmitted by specifying CVs for two key paramters natural mortality *M* (assumed to be age-independent) and the steepness parameter *h* of the Beverton and Holt Spawner-Recruitment Relationship.
+Growth is described by the von Bertalnffy Growth Function (VBGF). The maximum age can be treated a plus group `plusgroup = c(FALSE,TRUE)[2]` or as *de facto* maximum age  `plusgroup = c(FALSE,TRUE)[1]`. Maturity as logistic a logistic function that can be either specified  by lengths where 50% (Lm50) and 95% (Lm95%) maturity is attained `maturity = c(Lm50,Lm95,0)` or the ages where 50% (Am50) and 95% (Am95%) maturity is attained `maturity = c(Am50,Am95,1)`, which is selected by choosing 0 for length, and 1 for age as the third value when specifying `maturity`. Uncertainty can be admitted  by specifying CVs for two key paramters natural mortality *M* (assumed to be age-independent) and the steepness parameter *h* of the Beverton and Holt Spawner-Recruitment Relationship.
 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/Prior_hM_KOBSim.png" width="900">
@@ -286,7 +286,7 @@ The resulting relationships of length-at-age, weight-at-length, weight-at-age an
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/StockFunctions_KOBSim.png" width="900">
 <br>
 
-In addition, JABBA-Select permits to specify growth and length-weight functions to be sex specific by adding `nsexes = 2` (`nsexes = 1` is default). This then requires spefifyinh two values for each paramter: the first for females and the second for males (see our more complext worked example for North Atlantic swordfish [SWOss3](https://github.com/jabbamodel/JABBA-Select/tree/master/SWOss3)). 
+In addition, JABBA-Select permits to specify growth and length-weight functions to be sex specific by adding `nsexes = 2` (`nsexes = 1` is default). This then requires specifying two values for each parameter: the first for females and the second for males (see our more complex worked example for North Atlantic swordfish [SWOss3](https://github.com/jabbamodel/JABBA-Select/tree/master/SWOss3)). 
 
 ``` r
 #---------------------------------------------------------------
@@ -303,7 +303,7 @@ kappa <- c(0.147,0.266)
 t0 <- c(-1.163, -0.6)
 ```
 
-If `nsexes = 2`, the maturity function and spawning biomass (SB) is speficific to females.
+If `nsexes = 2`, the maturity function and spawning biomass (SB) is specific to females.
 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/SWOselect_JS/Input/StockFunctions_SWOss3.png" width="900">
@@ -320,11 +320,11 @@ Based on the Life History parameters and given uncertainty about *M* and *h*, JA
 
 ### Catchability, Observation Error and Process Error settings
 
-Like JABBA, JABBA-SELECT allows the separation of the observation variance into three components: (1) the squared externally estimable observation error (`SE`), that is read-in via [`se`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/seKOBsim.csv) csv file, (2) a fixed additional input variance denoted in the R code as `fixed.obsE`, and (3) estimable variance, which is envoked if `sigma.est = TRUE`, where the default prior option for assumes an uninformative inverse-gamma distribution with both gamma scaling parameters set to 0.001. This variance can be estimated individually for each abudance index <i> i </i> for goups of indices or as single quantity common to all indices. All three variance components are additive and can be switched on or off in any combination to provide flexible data-weighting options. Please also see section  *2.3.2. Prior specification* in [Winker et al. (2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) for additional details.
+Like JABBA, JABBA-SELECT allows the separation of the observation variance into three components: (1) the squared externally estimable observation error (`SE`), that is read-in via [`se`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/seKOBsim.csv) csv file, (2) a fixed additional input variance denoted in the R code as `fixed.obsE`, and (3) estimable variance, which is invoked if `sigma.est = TRUE`, where the default prior option for assumes an uninformative inverse-gamma distribution with both gamma scaling parameters set to 0.001. This variance can be estimated individually for each abundance index <i> i </i> for groups of indices or as single quantity common to all indices. All three variance components are additive and can be switched on or off in any combination to provide flexible data-weighting options. Please also see section  *2.3.2. Prior specification* in [Winker et al. (2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) for additional details.
 
-The estimable observation variance *σ*<sub>*e**s**t*, *i*</sub><sup>2</sup> can be specified to be estimated: (1) for each CPUE index, (2) in groups or (3) as the same quantatity for all indices. For (1), simply provide a vector of unique integer in order for each index, e.g. `sets.var = select$q[select$CPUE]`. For (2), `set.var =` can be specified by grouping similar indices, e.g. `sets.var = c(1,1,2,2,3)`. For (3), simply provide the indentifier 1 for all indices, e.g. `sets.var = rep(1,ncol(cpue)-1)`. The exact same principles apply for changing the assigned *q*<sub> *i*</sub> for index *i*. For example for option (1), one can simply specify `sets.var = 1:length(select$q[select$CPUE])`. <br>
+The estimable observation variance *σ*<sub>*e**s**t*, *i*</sub><sup>2</sup> can be specified to be estimated: (1) for each CPUE index, (2) in groups or (3) as the same quantity for all indices. For (1), simply provide a vector of unique integer in order for each index, e.g. `sets.var = select$q[select$CPUE]`. For (2), `set.var =` can be specified by grouping similar indices, e.g. `sets.var = c(1,1,2,2,3)`. For (3), simply provide the identifier  1 for all indices, e.g. `sets.var = rep(1,ncol(cpue)-1)`. The exact same principles apply for changing the assigned *q*<sub> *i*</sub> for index *i*. For example for option (1), one can simply specify `sets.var = 1:length(select$q[select$CPUE])`. <br>
 
-In this example index A1.S1 and A1.S2 are for example assumed to have a common q = 1, but different selectivity function due to the change in size limits, whereas A1.S1 and A2.S1, which were indipendtly generated from e.g. two regions, are assigned common selectivity functions but different *q*'s. 	 
+In this example index A1.S1 and A1.S2 are for example assumed to have a common q = 1, but different selectivity function due to the change in size limits, whereas A1.S1 and A2.S1, which were independently generated from e.g. two regions, are assigned common selectivity functions but different *q*'s. 	 
 
 ``` r
 
@@ -346,7 +346,7 @@ In this example index A1.S1 and A1.S2 are for example assumed to have a common q
     fixed.obsE = 0.01
 
 ```
-The process variation on log(SB) can be chosen to be estimable `sigma.proc = TRUE` or fixed `sigma.proc = FALSE`. If `sigma.proc = TRUE`, the user has the option to specify a prior for the estimable process variance as inverse-gamma distribution `proc.type = c("igamma","lnorm")[1]` (see [Millar & Meyer 2000](https://www.jstor.org/stable/2680768?seq=1)) or a process error prior (not variance) as lognormal distribution `proc.type = c("igamma","lnorm")[1]`, which can be for example derived of simulation studies ([Winker 2018](http://webcms.uct.ac.za/sites/default/files/image_tool/images/302/pub/2018/IWS2018/Line_Fish/MARAM_IWS2018_Linefish_P3%20-%20SPM_ProcessErrors.docx)). The defaul setting for inverse-gamma is an uninformative approximation of the Jeffrey's prior with `pr.proc = c(0.001,0.001)`. It is probably more intuitive forumalte informative lognormal priors for the process error `pr.proc = c(log(mu),CV)`, where range between 0.05 (long generation times) and 0.15 (short generation times) are thought covering to capture the plausibe ranges (see e.g. [Winker 2018](http://webcms.uct.ac.za/sites/default/files/image_tool/images/302/pub/2018/IWS2018/Line_Fish/MARAM_IWS2018_Linefish_P3%20-%20SPM_ProcessErrors.docx)). A concservative starting value for an informative inverse-gamma prior would `pr.proc = c(4,0.01)` (c.f. [Millar & Meyer 2000](https://www.jstor.org/stable/2680768?seq=1); [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845)). The provided R code in this example Prime file includes some simple checks for approximating the mean and CV given the choice of scale and shape parameters `pr.proc = c(shape,scale)` for the inverse-gamma distribution. 
+The process variation on log(SB) can be chosen to be estimable `sigma.proc = TRUE` or fixed `sigma.proc = FALSE`. If `sigma.proc = TRUE`, the user has the option to specify a prior for the estimable process variance as inverse-gamma distribution `proc.type = c("igamma","lnorm")[1]` (see [Millar & Meyer 2000](https://www.jstor.org/stable/2680768?seq=1)) or a process error prior (not variance) as lognormal distribution `proc.type = c("igamma","lnorm")[1]`, which can be for example derived from simulation studies ([Winker 2018](http://webcms.uct.ac.za/sites/default/files/image_tool/images/302/pub/2018/IWS2018/Line_Fish/MARAM_IWS2018_Linefish_P3%20-%20SPM_ProcessErrors.docx)). The default setting for inverse-gamma is an uninformative approximation of the Jeffrey's prior with `pr.proc = c(0.001,0.001)`. It is probably more intuitive to formulate informative lognormal priors for the process error `pr.proc = c(log(mu),CV)`, where range between 0.05 (long generation times) and 0.15 (short generation times) are thought to be within the expected ranges (see e.g. [Winker 2018](http://webcms.uct.ac.za/sites/default/files/image_tool/images/302/pub/2018/IWS2018/Line_Fish/MARAM_IWS2018_Linefish_P3%20-%20SPM_ProcessErrors.docx)). A conservative starting value for an informative inverse-gamma prior would `pr.proc = c(4,0.01)` (c.f. [Millar & Meyer 2000](https://www.jstor.org/stable/2680768?seq=1); [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845)). The provided R code in this example Prime file includes some simple checks for approximating the mean and CV given the choice of scale and shape parameters `pr.proc = c(shape,scale)` for the inverse-gamma distribution. 
 
 If the choice is to fix the process error by setting `sigma.proc = FALSE`, the expected mean specified by e.g. `sigma.proc = 0.1`. Note that short and/or noisy CPUE time series may not permit to estimate the process error reliably due to lack of contrast and information in the data. In such cases, it is recommended to initially develop the JABBA-Select with fixed process error and possibly explore option to use prior once the model runs stable.
 
@@ -397,10 +397,10 @@ In addition JABBA-Select provides the user option to specify a target *SB*/*SB*<
 
 ### Projections under constant Total Allowable Catch (TAC)
 
-JABBA-Select enables projections under constant catch scenarios, where weighted average of the annual sustainable
+JABBA-Select enables projections under a sequence of constant catch scenarios, where the weighted average of the annual sustainable
 harvest rate H<sub>MSY,y</sub> (see Eq. 11 in [Winker et al. (2020)](https://www.sciencedirect.com/science/article/pii/S0165783619302103)) is determined by relative catch by fleet in the terminal year to account for selectivity induced changes of the stock’s surplus production during the projection phase. Note that projecting relative catch by fleet can be relatively easily customized by adding an additional year with values of to be projected catches by fleet to the `catch` input csv and another year with otherwise empty cells to the  `cpue ` and `se` input files.   
 
-JABBA-SELECT automatically compares the difference between the last assessment year and the quota implemtation year `imp.yr`. The difference between these years is projected forward under the *current* catch. Alternative fixed catches can specied as `TACs`. In this, example, we project over a sequence from 50% to 120% of the current catch `curC` in steps of 10% increaments. The `TACs`are implemented from from year 41 and the projection horizon is set to 10 years as `pyrs = 10`. The projected posteriors can be saved as `_projections.Rdata` object by setting `save.projections = TRUE` under the *Basic settings* section.
+JABBA-SELECT automatically compares the difference between the last assessment year and the quota implemtation year `imp.yr`. The difference between these years is projected forward under the *current* catch. Alternative fixed catches can specified as `TACs`. In this, example, we project over a sequence from 50% to 120% of the current catch `curC` in steps of 10% increments. The `TACs`are implemented from from year 41 and the projection horizon is set to 10 years as `pyrs = 10`. The projected posteriors can be saved as `_projections.Rdata` object by setting `save.projections = TRUE` under the *Basic settings* section.
 
 ``` r
    #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
