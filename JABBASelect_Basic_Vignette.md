@@ -386,14 +386,15 @@ If the choice is to fix the process error by setting `sigma.proc = FALSE`, the e
 ```
 ### Biological Reference Points
 
-By default the stock 
+By default the stock the stock status reference points are the harvest rate that is required to attain MSY, *H*<sub>MSY</sub> and the corresponding spawning biomass at MSY, *SB*<sub>MSY</sub> by using default `SBmsy_SB0 = NULL`.  
 
-To determine stock status based on BRPs, we made use of the
-JABBA-Select user option to specify a target SB/SB0 in addition to the
-SBMSY that maximizes MSY. Here, we adopted SB40 = 0.4 × SB0 as a
-precautionary reference SB for the stock status in accordance with the
-South African Linefishery management protocol (Griffiths, 1997).
 
+In addition JABBA-Select provides the user option to specify a target *SB*/*SB*<sub>0</sub>. In this example, we adopted *SB*<sub>40</sub>40 = 0.4 × *SB*<sub>0</sub> and the corresponding *H*<sub>40</sub> as the target reference for *SB*, by setting `SBmsy_SB0 = 0.4`. 
+
+<br>
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Output/TrendMSY_KOBSim_SELECT.png" width="900">
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Output/Kobe_KOBSim_SELECT.png" width="900">
+<br>
 
 ### Projections under constant Total Allowable Catch (TAC)
 
