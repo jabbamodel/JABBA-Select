@@ -186,22 +186,46 @@ Here, the user can specify if the `se` file is available by setting \`SE.I = TRU
   
 ```
 
-### Biomass priors and reference points
+### Biomass priors 
 
-JABBA-Select requires two priors on Spawning Biomass (*SB*). The first a lognormal for the unfished *SB*<sub>0</sub>, which should be typically speficified as vaguely as possible around some plauseble "guess". To this we suggest a CV of 100-200%. To minimize the influence of the choice and improve modelperformance, it adviced that the Posterior median should be always located to right of the highest density peak of the *SB*<sub>0</sub> prior distribution. A very small Prior-Posterior-Variance-Ratio (PPVR) is indicative for the estimate being minimally informaned by the choice of prior.
+JABBA-Select requires two priors on Spawning Biomass (*SB*). The first is a lognormal for the unfished *SB*<sub>0</sub>, which should be typically speficified as vaguely as possible around some plauseble "guess". To this we suggest a CV of 100-200%. To minimize the influence of the choice and improve modelperformance, it adviced that the Posterior median should be always located to right of the highest density peak of the *SB*<sub>0</sub> prior distribution. A very small Prior-Posterior-Variance-Ratio (PPVR) is indicative for the estimate being minimally informaned by the choice of prior.
 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Output/Posteriors_KOBSim_SELECT.png" width="900">
 <br>
 
-mu.SB0 = 30000; CV.SB0 = 2; 
-SB0.pr = c(mu.SB0,CV.SB0)
+The second is a prior to inform the the model about initial spawning biomass level at the start of the catch time series `psi` = *SB*<sub>y=1</sub>/*SB*<sub>0</sub>, which can be implemented as either lognormal `psi.prior= c("lognormal","beta")[1]` or beta `psi.prior= c("lognormal","beta")[2]` distribution by specifying the mean and CV of the respective distributions. Here we assumed that the inital *SB* at the start of the catch time series was varying around the unfished *SB*<sub>0</sub> by assuming a lognormal with a mean *SB*<sub>y=1</sub>/*SB*<sub>0</sub> = 1 with a CV = 30% by setting `mu.psi = 1; CV.psi = 0.3`.  
+
+JABBA-Select provides imposes “soft” boundary penalty on *SB* if P<sub>y</sub> = *SB*<sub>y</sub>/*SB*<sub>0</sub>, decreases below or is either equal to or greater than user-defined minimum and maximum values, respectively (default: min=0.02, max=1.3). The idea is that the likelihood is increasingly penalized the further that P<sub>y</sub> diverges from the soft boundaries, thereby improving mixing behaviour of MCMC chains. These constraints can be manually relaxed by setting e.g. `P_bound = c(0.0001,1.5)` if the model runs sufficiently stable.
+
+
+
+``` r
+
+ #------------------------------------------------
+  # mean and CV and sd for unfished biomass K (SB0)
+  #------------------------------------------------
+  mu.SB0 = 30000; CV.SB0 = 2; sd.SB0=sqrt(log(CV.SB0^2+1)) 
+  SB0.pr = c(mu.SB0,sd.SB0)
     
+  
+  #-----------------------------------------------------------
+  # mean and CV and sd for Initial depletion level P1= SB/SB0
+  #-----------------------------------------------------------
+  # Set the initial depletion prior SB/SB0 
+  # To be converted into a lognormal prior (with upper bound at 1.1)
+    
+    psi.prior= c("lognormal","beta")[1]
+    # specify as mean and CV 
+    mu.psi = 1 
+    CV.psi = 0.3 
+  
+ #--------------------------------------------
+     
+    # Soft Penalty to control lower and upper SB_t/SB0
+    P_bound = c(0.0001,1.5) 
 
-Most prior settings provide more than one option. For example, if the prior for K is meant to be specified as a lognormal prior set K.dist = c("lnorm","range")[1], whereas for a range set K.dist = c("lnorm","range")[2]. If the prior for K is specified as lognormal, e.g. K.prior = c(200000,1), it requires the untransformed mean K and the assumed CV. If the prior for K is specified as range, it requires the assumed minum and maximum values, e.g. K.prior = c(15000,1500000).
-
-The r prior provides an additional option, in that it can be specified as a generic resiliance category Very low, Low, Medium or High, such as provided by FishBase. This requires specifying K.dist = c("lnorm","range")[2] (i.e. as a range) and then setting the K.prior equal to one of the above reliance categories, e.g. K.prior = "Low".
-
+```
 
 ### Catchability, Observation Error and Process Error settings
 
