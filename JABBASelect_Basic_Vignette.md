@@ -1,6 +1,5 @@
-JABBA-Select Model Execution Vignette
-================
-# STILL UNDER CONSTRUCTION
+JABBA-Select Basic User Guide
+==============================
 
 Written by Henning Winker <br>
 henning.winker@gmail.com
@@ -39,7 +38,7 @@ library(mvtnorm);library(scales)
 
 The simulation example of Silver Kob is used to illustrate the basic steps of fitting a JABBA-Select model using the Prime file [`JABBA_SELECT_prime_KOBsim.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/JABBA_SELECT_prime_KOBsim.R). 
 
-The population dynamics of silver kob are those assumed in Winker et al. (2019). The availbe data are catch and catch-per-unit effort (CPUE) time series over a period of 40 years. A simple logistic selectivity function is assumed, which is described by the lengths where 50% and 95% of fish are retained as catch. Length-at-50%-selectivity increased after year 25 to simulate an increase in miminum size limit regulations.  Here, two CPUE indices are simulated, which are associated with different standard errors catchability q (different scale) to represent, for example, CPUE indices from two areas that are sampled with varying precision (Winker et al. 2019).
+The population dynamics of silver kob are those assumed in Winker et al. (2019). The availbe data are catch and catch-per-unit effort (CPUE) time series over a period of 40 years. A simple logistic selectivity function is assumed, which is described by the lengths where 50% and 95% of fish are retained as catch. Length-at-50%-selectivity increased after year 25 to simulate an increase in miminum size limit regulations.  Here, two CPUE indices are simulated, which are associated with different standard errors catchability q (different scale) to represent, for example, CPUE indices from two areas that are sampled with varying precision ([Winker et al. 2020)](https://www.sciencedirect.com/science/article/pii/S0165783619302103).
 
 
 ### Input files
@@ -398,25 +397,29 @@ In addition JABBA-Select provides the user option to specify a target *SB*/*SB*<
 
 ### Projections under constant Total Allowable Catch (TAC)
 
-JABBA enables projections under constant catch scenarios. JABBA automatically compares the difference between the last assessment year and the present year. The difference between these years is projected forward under the *current* catch, which could, for example, be determined based on updated catch inofrmation `TACint = 10058` or by assuming an average catch based on the three most recent assessment years, such that `TACint = mean(catch[nrow(catch)-3,2]:catch[nrow(catch),2])`. All prjected posteriors can be saved a `_projections.Rdata` object, which can be easily passed on JABBAgoesFLR.R for further processing, including the production of Kobe projection matrices.
+JABBA-Select enables projections under constant catch scenarios, where weighted average of the annual sustainable
+harvest rate H<sub>MSY,y</sub> (see Eq. 11 in [Winker et al. (2020)](https://www.sciencedirect.com/science/article/pii/S0165783619302103)) is determined by relative catch by fleet in the terminal year to account for selectivity induced changes of the stock’s surplus production during the projection phase. Note that projecting relative catch by fleet can be relatively easily customized by adding an additional year with values of to be projected catches by fleet to the `catch` input csv and another year with otherwise empty cells to the  `cpue ` and `se` input files.   
+
+JABBA-SELECT automatically compares the difference between the last assessment year and the quota implemtation year `imp.yr`. The difference between these years is projected forward under the *current* catch. Alternative fixed catches can specied as `TACs`. In this, example, we project over a sequence from 50% to 120% of the current catch `curC` in steps of 10% increaments. The `TACs`are implemented from from year 41 and the projection horizon is set to 10 years as `pyrs = 10`. The projected posteriors can be saved as `_projections.Rdata` object by setting `save.projections = TRUE` under the *Basic settings* section.
 
 ``` r
-  #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
-  # Optional: Do TAC Projections
-  #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
-  Projection = TRUE # Switch on by Projection = TRUE 
-  
-  # Check final year catch 
-  catch[nrow(catch),]
-  
-  # Set range for alternative TAC projections
-  TACs = seq(10000,18000,1000) #example
-  
-  # Intermitted TAC to get to current year
-  #TACint = mean(catch[nrow(catch)-3,2]:catch[nrow(catch),2]) # avg last 3 years
-  TACint = 10058 # Catch for 2016
-  # Set number of projections years
-  pyrs = 10
+   #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
+   # Optional: Do TAC Projections
+   #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
+    Projection = TRUE # Switch on by Projection = TRUE 
+    
+    # Check final year catch
+    curC =  apply(catch[,-1],1,sum,na.rm=TRUE)[nrow(catch)]
+    
+    # Set range for alternative TAC projections
+    TACs = ceiling(seq(0.5,1.2,0.1)*curC) #example
+    
+    # Set year of first TAC implementation
+    imp.yr = 41
+    
+    # Set number of projections years
+    pyrs = 10
+    
 ```
 
 ### MCMC setting and Model execution
@@ -425,16 +428,18 @@ JABBA enables projections under constant catch scenarios. JABBA automatically co
   #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
   # Execute model and produce output
   #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
-  
-  # MCMC settings
-  ni <- 30000 # Number of iterations
-  nt <- 5 # Steps saved
-  nb <- 5000 # Burn-in
-  nc <- 2 # number of chains
-  nsaved = (ni-nb)/nt*nc # MUST be an integer
-  
-  # Run model (JABBA model file, must be in the same working directory)
-  source(paste0(JABBA.file,"/JABBA",version,".R")) 
-  
-  }# THE END
+    # MCMC settings
+    ni <- 14000 # Number of iterations
+    nt <- 2 # Steps saved
+    nb <- 4000 # Burn-in
+    nc <- 3 # number of chains
+    nsaved = (ni-nb)/nt*nc
+    cat(paste0("\n","- Run Model","\n"))
+    
+    dir.create(paste0(File,"/",assessment),showWarnings = F)
+    
+    # RUN JABBA-SELECT
+    source(paste0(JABBA.file,"/JABBA_SELECT",version,".r"))
+ 
+
 ```
