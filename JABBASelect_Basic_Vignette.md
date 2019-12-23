@@ -241,6 +241,76 @@ JABBA-Select provides imposes “soft” boundary penalty on *SB* if P<sub>y</su
     P_bound = c(0.0001,1.5) 
 
 ```
+### Life History Parameters 
+
+JABBA-Select requires basic life history parameters as input the [Age-Structured Equilibbrium Model (ASEM) function](link here), describing growth, weight-lenght, maturation, longivity, natural mortality and the spawning-recruitment relationship recruitment 
+
+``` r
+    #---------------------------------------------------------------
+    # STOCK PARAMETERS for prior generation Hmsy as a fuction of r
+    #---------------------------------------------------------------
+    # Age
+    minage <- 0  																						
+    maxage <- 20
+    plusgroup = c(FALSE,TRUE)[1] 
+    #Growth paramters (von Bertalnffy)
+    Linf <- 1372
+    kappa <- 0.115
+    t0 <-  -0.815
+    
+    #Length-weight
+    aW <- 0.000006 																						
+    bW <- 3.07
+    
+    # Maturity 
+    maturity = c(2.5,2.6,1) # knife edge age-3 # a single value is taken as age (knife-edge) 
+    #c(Lm50,Lm95,0) # two values are taken as length-based: Lm50 and Lm95 
+    
+    # Natural mortality estimate (affects Hmsy)
+    M = 0.18
+    CV.M = 0.25 
+    
+    # steepness B&H SSR (effects Hmsy and determines SBmsy/SB0)
+    h = 0.8
+    CV.h = 0.1
+    
+```
+Growth is decribed by the von Bertalnffy Growth Function (VBGF). The maximum age can be treated a plus group `plusgroup = c(FALSE,TRUE)[2]` or as *de facto* maximum age  `plusgroup = c(FALSE,TRUE)[1]`. Maturity as logistic a logistic function that can be either specified  by lengths where 50% (Lm50) and 95% (Lm95%) maturity is attained `maturity = c(Lm50,Lm95,0)` or the ages where 50% (Am50) and 95% (Am95%) maturity is attained `maturity = c(Am50,Am95,1)`, which is selected by choosing 0 for length, and 1 for age as the third value when specifying `maturity`. Uncertainty can be addmitted by specifying CVs for two key paramters natural mortality *M* (assumed to be age-independent) and the steepness parameter *h* of the Beverton and Holt Spawner-Recruitment Relationship.
+
+<br>
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/Prior_hM_KOBSim.png" width="900">
+<br>
+
+The resulting relationships of length-at-age, weight-at-length, weight-at-age and maturity-at-length relative selectivity-at-length are shown in the `StockFunctions_` plot that is saved in the [`Input`](https://github.com/jabbamodel/JABBA-Select/tree/master/KOBsim_example/KOBsim/SELECT_JS/Input) folder.
+
+<br>
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/StockFunctions_KOBSim.png" width="900">
+<br>
+
+In addition, JABBA-Select permits to specify growth and length-weight functions to be sex specific by adding `nsexes = 2` (`nsexes = 1` is default). This then requires spefifyinh two values for each paramter: the first for females and the second for males (see our more complext worked example for North Atlantic swordfish [SWOss3](https://github.com/jabbamodel/JABBA-Select/tree/master/SWOss3)). 
+
+``` r
+#---------------------------------------------------------------
+# STOCK PARAMETERS for prior generation Hmsy as a fuction of r
+#---------------------------------------------------------------
+minage <- 0  																						
+maxage <- 25
+PlusGroup = TRUE
+# Number of sexes order Female and Males (this model is sex-structured)
+nsexes = 2
+# VBGF parameters
+Linf <- c(290.1,214.2)
+kappa <- c(0.147,0.266)
+t0 <- c(-1.163, -0.6)
+```
+
+If `nsexes = 2`, the maturity function and spawning biomass (SB) is speficific to females.
+
+<br>
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/SWOselect_JS/Input/StockFunctions_SWOss3.png" width="900">
+<br>
+
+
 
 ### Catchability, Observation Error and Process Error settings
 
@@ -308,70 +378,6 @@ If the choice is to fix the process error by setting `sigma.proc = FALSE`, the e
 
 ```
 
-### Life History Parameters 
-
-JABBA-Select requires basic life history parameters as input the [Age-Structured Equilibbrium Model (ASEM) function](link here), describing growth, weight-lenght, maturation, longivity, natural mortality and the spawning-recruitment relationship recruitment 
-
-``` r
-    #---------------------------------------------------------------
-    # STOCK PARAMETERS for prior generation Hmsy as a fuction of r
-    #---------------------------------------------------------------
-    # Age
-    minage <- 0  																						
-    maxage <- 20
-    plusgroup = c(FALSE,TRUE)[1] 
-    #Growth paramters (von Bertalnffy)
-    Linf <- 1372
-    kappa <- 0.115
-    t0 <-  -0.815
-    
-    #Length-weight
-    aW <- 0.000006 																						
-    bW <- 3.07
-    
-    # Maturity 
-    maturity = c(2.5,2.6,1) # knife edge age-3 # a single value is taken as age (knife-edge) 
-    #c(Lm50,Lm95,0) # two values are taken as length-based: Lm50 and Lm95 
-    
-    # Natural mortality estimate (affects Hmsy)
-    M = 0.18
-    CV.M = 0.25 
-    
-    # steepness B&H SSR (effects Hmsy and determines SBmsy/SB0)
-    h = 0.8
-    CV.h = 0.1
-    
-```
-Growth is decribed by the von Bertalnffy Growth Function (VBGF). The maximum age can be treated a plus group `plusgroup = c(FALSE,TRUE)[2]` or as *de facto* maximum age  `plusgroup = c(FALSE,TRUE)[1]`. Maturity as logistic a logistic function that can be either specified  by lengths where 50% (Lm50) and 95% (Lm95%) maturity is attained `maturity = c(Lm50,Lm95,0)` or the ages where 50% (Am50) and 95% (Am95%) maturity is attained `maturity = c(Am50,Am95,1)`, which is selected by choosing 0 for length, and 1 for age as the third value when specifying `maturity`. Uncertainty can be addmitted by specifying CVs for two key paramters natural mortality *M* (assumed to be age-independent) and the steepness parameter *h* of the Beverton and Holt Spawner-Recruitment Relationship.
-
-The resulting relationships of length-at-age, weight-at-length, weight-at-age and maturity-at-length relative selectivity-at-length are shown in the `StockFunctions_` plot that is saved in the [`Input`](https://github.com/jabbamodel/JABBA-Select/tree/master/KOBsim_example/KOBsim/SELECT_JS/Input) folder.
-
-<br>
-<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/StockFunctions_KOBSim.png" width="900">
-<br>
-
-In addition, JABBA-Select permits to specify growth and length-weight functions to be sex specific by adding `nsexes = 2` (`nsexes = 1` is default). This then requires spefifyinh two values for each paramter: the first for females and the second for males (see our more complext worked example for North Atlantic swordfish [SWOss3](https://github.com/jabbamodel/JABBA-Select/tree/master/SWOss3)). 
-
-``` r
-#---------------------------------------------------------------
-# STOCK PARAMETERS for prior generation Hmsy as a fuction of r
-#---------------------------------------------------------------
-minage <- 0  																						
-maxage <- 25
-PlusGroup = TRUE
-# Number of sexes order Female and Males (this model is sex-structured)
-nsexes = 2
-# VBGF parameters
-Linf <- c(290.1,214.2)
-kappa <- c(0.147,0.266)
-t0 <- c(-1.163, -0.6)
-```
-
-If `nsexes = 2`, the maturity function and spawning biomass (SB) is speficific to females.
-
-<br>
-<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/SWOselect_JS/Input/StockFunctions_SWOss3.png" width="900">
-<br>
 
 
 ### Projections under constant Total Allowable Catch (TAC)
