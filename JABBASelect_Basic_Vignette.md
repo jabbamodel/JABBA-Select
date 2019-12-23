@@ -310,7 +310,15 @@ If `nsexes = 2`, the maturity function and spawning biomass (SB) is speficific t
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/SWOselect_JS/Input/StockFunctions_SWOss3.png" width="900">
 <br>
 
+Based on the Life History parameters and given uncertainty about *M* and *h*, JABBA-SELECT generates a Multivariate Normal (MVN) Prior for *H*<sub>MSY</sub> and the shape *m* of the surplus production curve for selectivity function *s*. 
 
+
+<br>
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/Cor_m_Hmsy_KOBSim.png" width="900">
+<br>
+
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/ProdutionKOBSim.png" width="900">
+<br>
 
 ### Catchability, Observation Error and Process Error settings
 
