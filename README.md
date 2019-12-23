@@ -1,7 +1,6 @@
-JABBA-SELECT
+JABBA-SELECT:Incorporating life history and fisheries’ selectivity into surplus production models
 =============
-# Incorporating life history and fisheries’ selectivity into surplus production models
-### *Henning Winker, Felipe Carvalho, James T. Thorson, Laurence T. Kell, Denham Parker, Maia Kapur, Rishi Sharma, Anthony J. Booth, Sven E. Kerwath.*
+#### *Henning Winker, Felipe Carvalho, James T. Thorson, Laurence T. Kell, Denham Parker, Maia Kapur, Rishi Sharma, Anthony J. Booth, Sven E. Kerwath.*
 
 The materials in this repository present the JABBA-Select stock assessment model [(Winker et al. 2020)](https://www.sciencedirect.com/science/article/pii/S0165783619302103). JABBA-Select textends the Bayesian state-space surplus production model JABBA [(Winker et al. 2018)](https://www.sciencedirect.com/science/article/pii/S0165783618300845) to account for selectivity-induced distortion of abundance indices and impacts on stock productivity. Like JABBA, JABBA-Select is implemented in JAGS, called from the statistical programming environment R. JABBA-Select retains the core features of a basic JABBA modelling framework (Winker et al., 2018), including its modular coding structure, a suite of options to fix or estimate process and observation variance components and inbuilt graphics to illustrate model fit diagnostics and stock status results. 
 
