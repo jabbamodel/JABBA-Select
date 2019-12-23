@@ -384,7 +384,15 @@ If the choice is to fix the process error by setting `sigma.proc = FALSE`, the e
     }
 
 ```
+### Biological Reference Points
 
+By default the stock 
+
+To determine stock status based on BRPs, we made use of the
+JABBA-Select user option to specify a target SB/SB0 in addition to the
+SBMSY that maximizes MSY. Here, we adopted SB40 = 0.4 × SB0 as a
+precautionary reference SB for the stock status in accordance with the
+South African Linefishery management protocol (Griffiths, 1997).
 
 
 ### Projections under constant Total Allowable Catch (TAC)
