@@ -186,6 +186,22 @@ Here, the user can specify if the `se` file is available by setting \`SE.I = TRU
   
 ```
 
+### Biomass priors and reference points
+
+JABBA-Select requires two priors on Spawning Biomass (*SB*). The first a lognormal for the unfished *SB*<sub>0</sub>, which should be typically speficified as vaguely as possible around some plauseble "guess". To this we suggest a CV of 100-200%. To minimize the influence of the choice and improve modelperformance, it adviced that the Posterior median should be always located to right of the highest density peak of the *SB*<sub>0</sub> prior distribution. A very small Prior-Posterior-Variance-Ratio (PPVR) is indicative for the estimate being minimally informaned by the choice of prior.
+
+<br>
+<img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Output/Posteriors_KOBSim_SELECT.png" width="900">
+<br>
+
+mu.SB0 = 30000; CV.SB0 = 2; 
+SB0.pr = c(mu.SB0,CV.SB0)
+    
+
+Most prior settings provide more than one option. For example, if the prior for K is meant to be specified as a lognormal prior set K.dist = c("lnorm","range")[1], whereas for a range set K.dist = c("lnorm","range")[2]. If the prior for K is specified as lognormal, e.g. K.prior = c(200000,1), it requires the untransformed mean K and the assumed CV. If the prior for K is specified as range, it requires the assumed minum and maximum values, e.g. K.prior = c(15000,1500000).
+
+The r prior provides an additional option, in that it can be specified as a generic resiliance category Very low, Low, Medium or High, such as provided by FishBase. This requires specifying K.dist = c("lnorm","range")[2] (i.e. as a range) and then setting the K.prior equal to one of the above reliance categories, e.g. K.prior = "Low".
+
 
 ### Catchability, Observation Error and Process Error settings
 
