@@ -315,7 +315,6 @@ Based on the Life History parameters and given uncertainty about *M* and *h*, JA
 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/Cor_m_Hmsy_KOBSim.png" width="900">
-<br>
 
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/SELECT_JS/Input/ProdutionKOBSim.png" width="900">
 <br>
