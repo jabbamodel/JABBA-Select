@@ -310,7 +310,7 @@ JABBA-Select requires basic life history parameters as input the [Age-Structured
     
     # steepness B&H SSR (effects Hmsy and determines SBmsy/SB0)
     h = 0.8
-    CV.h = 0.1
+    CV.h = 0.15
     
 ```
 Growth is described by the von Bertalnffy Growth Function (VBGF). The maximum age can be treated a plus group `plusgroup = c(FALSE,TRUE)[2]` or as *de facto* maximum age  `plusgroup = c(FALSE,TRUE)[1]`. Maturity as logistic a logistic function that can be either specified  by lengths where 50% (Lm50) and 95% (Lm95%) maturity is attained `maturity = c(Lm50,Lm95,0)` or the ages where 50% (Am50) and 95% (Am95%) maturity is attained `maturity = c(Am50,Am95,1)`, which is selected by choosing 0 for length, and 1 for age as the third value when specifying `maturity`. Uncertainty can be admitted  by specifying CVs for two key paramters natural mortality *M* (assumed to be age-independent) and the steepness parameter *h* of the Beverton and Holt Spawner-Recruitment Relationship.

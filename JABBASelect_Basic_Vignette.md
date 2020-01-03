@@ -1,3 +1,4 @@
+
 JABBA-Select Basic User Guide
 ==============================
 
@@ -271,7 +272,7 @@ JABBA-Select requires basic life history parameters as input the [Age-Structured
     
     # steepness B&H SSR (effects Hmsy and determines SBmsy/SB0)
     h = 0.8
-    CV.h = 0.1
+    CV.h = 0.15
     
 ```
 Growth is described by the von Bertalnffy Growth Function (VBGF). The maximum age can be treated a plus group `plusgroup = c(FALSE,TRUE)[2]` or as *de facto* maximum age  `plusgroup = c(FALSE,TRUE)[1]`. Maturity as logistic a logistic function that can be either specified  by lengths where 50% (Lm50) and 95% (Lm95%) maturity is attained `maturity = c(Lm50,Lm95,0)` or the ages where 50% (Am50) and 95% (Am95%) maturity is attained `maturity = c(Am50,Am95,1)`, which is selected by choosing 0 for length, and 1 for age as the third value when specifying `maturity`. Uncertainty can be admitted  by specifying CVs for two key paramters natural mortality *M* (assumed to be age-independent) and the steepness parameter *h* of the Beverton and Holt Spawner-Recruitment Relationship.
@@ -443,3 +444,11 @@ JABBA-SELECT automatically compares the difference between the last assessment y
  
 
 ```
+
+
+**Reference**
+
+[Winker H., Carvalho F., Thorson J.T., Kell L.T., Parker D., Kapur M., Sharma R., Booth A.J., Kerwatha S.E. (2020) <U>JABBA-Select: Incorporating life history and fisheries’ selectivity into surplus production models</U> *Fisheries Research* **22*: 105355](https://www.sciencedirect.com/science/article/pii/S0165783619302103)   
+
+[Winker, H., Carvalho, F., Kapur, M. (2018) <U>JABBA: Just Another Bayesian Biomass Assessment.</U> *Fisheries Research* **204**: 275-288.](https://www.sciencedirect.com/science/article/pii/S0165783618300845)   
+
