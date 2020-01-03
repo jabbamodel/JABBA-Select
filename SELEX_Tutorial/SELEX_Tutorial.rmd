@@ -17,7 +17,9 @@ fontsize: 11pt
 
 To add flexibility for exploring alternative assumptions about selectivity, JABBA-Select provides the user an option to specify a 5-parameter piece-wise dome-shaped selectivity curve, with a logistic function for the ascending limb and the descending limb described by the mean and CV of a half-normal distribution [(Huynh et al., 2018)](https://afspubs.onlinelibrary.wiley.com/doi/full/10.1002/mcf2.10027)
 
-This little tutorial R code illustrates how to approximate the 5 parameters for JABBA-Selex function from various selection-at-length(age) relationships. To do this, we use the `jabba.selex()` function to selectivity-at-length vectors shown below: 
+This little tutorial [R code](https://github.com/jabbamodel/JABBA-Select/blob/master/SELEX_Tutorial/SELEX_Tutorial.rmd) illustrates how to approximate the 5 parameters for JABBA-Selex function from various selection-at-length(age) relationships (see also [`ss2jabba_swnbase.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/ss2jabba_swnbase.R) for extracting selectivity functions from Stock Synthesis). 
+
+To do this, we fit the `jabba.selex()` function to selectivity-at-length vectors and estimate the five selex input parameters for JABBA-Select, where `SL50` and `SL95` are the lengths along a logistic ogive where 50% and 95% of fish are selected, `SL.desc` determines length were right limb of a dome shaped curve is starting descend as a function of a half-normal distribution, `CV.desc` of the half-normal and thus represents the rate of descent and `min.desc` determines the minimum height of the descending curve after which it remains constant (c.f. SS3 SELEX)
 
 
 ``` {r, eval =TRUE}
@@ -46,6 +48,27 @@ jsel.ll = function(pars,dat){
 } 
 
 ```
+
+``` {r, echo=F,eval =TRUE}
+
+L_f = 1:100
+selpars = c(25,30,50,0.3,0.25) 
+
+sel_a_f = 1/(1+exp(-log(19)*(L_f-selpars[1])/(selpars[2]-selpars[1])))
+  sel_b_f = dnorm(L_f,selpars[3],selpars[3]*selpars[4])/max(dnorm(L_f,selpars[3],selpars[3]*selpars[4]))
+  sel_c_f = 1+(selpars[5]-1)*(sel_b_f-1)/(-1)
+  sel_f = as.numeric(ifelse(rep(selpars[3],length(L_f))>=L_f,sel_a_f,sel_c_f))
+par(mfrow=c(1,1),mai=c(0.5,0.45,0,.15),omi = c(0.1,0.1,0.2,0) + 0.1,mgp=c(2,0.5,0), tck = -0.02,cex=0.8)
+
+plot(L_f,sel_f,xlab="Length",ylab="Selectivity",type="n")
+legend("right",c("Selectivity","Logistic","Half-Normal","Height"),pch=c(rep(-1,4)),lwd=c(rep(2,4)),col=c(2,4,3,7),cex=0.8,bty="n")
+lines(L_f,sel_a_f,lwd=2,col=4)
+lines(L_f,sel_b_f,lwd=2,col=3)
+lines(L_f,sel_c_f,lwd=2,col=7)
+lines(L_f,sel_f,lwd=2,col=2)
+```  
+
+
 
 [Punt and Japp (1994)](https://www.tandfonline.com/doi/pdf/10.2989/025776194784286996) delevoped a determistic Age-Structured Production Model to conduct an assessment of South African Kinklip stock. For sensitivity runs they explored altenative selectivity-at-age functions to model logistic and dome-shaped selectivity patterns of demersal longline and trawl fisheries, respectively. The selectivity-at-age of functions are given Appendix III by the equations AIII.1 and AIII.2 in Punt and Jupp (1994), which are written in the form of the `selfun()`:    
 
@@ -110,11 +133,9 @@ for(i in 1:nSel){
 }
 ```
 
-The goal with the `jabba.selex()` function is to estimate the five parameters that best approximate these selectivity patterns as a function length, where `SL50` is the length-at-50%-selectivity, `SL95` is the length-at-95%-selectivity. `SL.desc` determines the length were right limb of a dome shaped curve is starting descend, `CV.desc` is the rate of descent and `min.desc` determines the minimum of the descending curve after which it remains constant (c.f. SS3 SELEX).
+The goal with the `jabba.selex()` function is to estimate the five parameters that best approximate these selectivity patterns as a function of length. As common for non-linear models `jabba.selex()` requires reasonable initial values for the five estimable parameters.
 
-As common for non-linear models `jabba.selex()` requires reasonable initial values for the five estimable parameters.
-
-This can be done fairly generically, such that. 
+This can be done fairly generically, such that:
 
 ```{r, echo=TRUE , eval=T}
 

@@ -10,10 +10,22 @@ function for the ascending limb and the descending limb described by the
 mean and CV of a half-normal distribution [(Huynh et al.,
 2018)](https://afspubs.onlinelibrary.wiley.com/doi/full/10.1002/mcf2.10027)
 
-This little tutorial R code illustrates how to approximate the 5
-parameters for JABBA-Selex function from various
-selection-at-length(age) relationships. To do this, we use the
-`jabba.selex()` function to selectivity-at-length vectors shown below:
+This little tutorial [R
+code](https://github.com/jabbamodel/JABBA-Select/blob/master/SELEX_Tutorial/SELEX_Tutorial.rmd)
+illustrates how to approximate the 5 parameters for JABBA-Selex function
+from various selection-at-length(age) relationships (see also
+[`ss2jabba_swnbase.R`](https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/ss2jabba_swnbase.R)
+for extracting selectivity functions from Stock Synthesis).
+
+To do this, we fit the `jabba.selex()` function to selectivity-at-length
+vectors and estimate the five selex input parameters for JABBA-Select,
+where `SL50` and `SL95` are the lengths along a logistic ogive where 50%
+and 95% of fish are selected, `SL.desc` determines length were right
+limb of a dome shaped curve is starting descend as a function of a
+half-normal distribution, `CV.desc` of the half-normal and thus
+represents the rate of descent and `min.desc` determines the minimum
+height of the descending curve after which it remains constant (c.f. SS3
+SELEX)
 
     #--------------------------------------
     # JABBA-Selex function
@@ -38,6 +50,8 @@ selection-at-length(age) relationships. To do this, we use the
     jsel.ll = function(pars,dat){
       jabba.selex(pars,dat)$ll
     } 
+
+![](SELEX_Tutorial_files/figure-markdown_strict/unnamed-chunk-2-1.png)
 
 [Punt and Japp
 (1994)](https://www.tandfonline.com/doi/pdf/10.2989/025776194784286996)
@@ -73,7 +87,7 @@ in Punt and Jupp (1994).
     par(mfrow=c(1,1),mai=c(0.5,0.45,0,.15),omi = c(0.1,0.1,0.2,0) + 0.1,mgp=c(2,0.5,0), tck = -0.02,cex=0.8)
     plot(age,L_a,ylab="Length (mm)",xlab="Age",type="l",lwd=2,col=4)
 
-![](SELEX_Tutorial_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+![](SELEX_Tutorial_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
 The selectivity-at-age paramters are extracted from Table 4 (base case)
 and Table 5 (sensitivity runs), where `a50` is the
@@ -109,20 +123,14 @@ selectivity parameters with `selfun()`.
       points(age,selfun(age,a50[i],delta[i],lamda[i]),pch=16,col=cols[2+i],cex=0.7)
     }
 
-![](SELEX_Tutorial_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](SELEX_Tutorial_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
 The goal with the `jabba.selex()` function is to estimate the five
 parameters that best approximate these selectivity patterns as a
-function length, where `SL50` is the length-at-50%-selectivity, `SL95`
-is the length-at-95%-selectivity. `SL.desc` determines the length were
-right limb of a dome shaped curve is starting descend, `CV.desc` is the
-rate of descent and `min.desc` determines the minimum of the descending
-curve after which it remains constant (c.f. SS3 SELEX).
+function of length. As common for non-linear models `jabba.selex()`
+requires reasonable initial values for the five estimable parameters.
 
-As common for non-linear models `jabba.selex()` requires reasonable
-initial values for the five estimable parameters.
-
-This can be done fairly generically, such that.
+This can be done fairly generically, such that:
 
     L_a = selex.dat$L_a
     Sel = selex.dat$Sel5 # Choose dome-shaped selectivity
@@ -188,7 +196,7 @@ of piece-wise Selex function are illustrated in color-code plots.
       
     } # End of selectivity loop
 
-![](SELEX_Tutorial_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](SELEX_Tutorial_files/figure-markdown_strict/unnamed-chunk-10-1.png)
 
 The final step is format and save the `selex` input .csv file - in this
 case for a JABBA-Select Kingklip (KKPL).
