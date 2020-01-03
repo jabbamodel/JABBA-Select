@@ -55,36 +55,6 @@ pr.proc=c(2,2)
 
 #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
 
-#--------------------------------------------------------------
-# Assign Selectivity, which will determine changes in r (Fmsy)
-#--------------------------------------------------------------
-
-# only unique SL50 values (no replicates) 
-# Selectivity SL50 must be sufficiently different (+-5%) between "fleets" to seperate r 
-
-# only unique SL50 values are permitted (no replicates) 
-SL50 <- as.numeric(selex[1,-1]) 
-SL95 <- as.numeric(selex[2,-1])  # If unknown set to 0.05*SL50 ~ knife-edge
-
-# Define point where descening limb starts (set Linf for logistic)
-SL.desc <-as.numeric(selex[3,-1])  # mean of half-normal 
-# Define rate of decreasing selectivity
-CV.desc <- as.numeric(selex[4,-1]) # CV of half-normal 
-# Define minimum descending limp between 0 and 1
-min.desc =as.numeric(selex[5,-1]) 
-
-# number of different Hmsy (r) priors 
-nSel = length(SL50)
-
-# Assign Selectivity to abundance indices
-sets.I = select$Selectivity[select$CPUE] 
-
-# Assign Selectivity to catch series
-sets.C = select$Selectivity[select$Catch] 
-
-# Define if index is in numbers: 0 or biomass: 1 
-I.unit =  aggregate(CPUE.units~Selectivity,data=select[select$CPUE,],mean)[,2]
-
 
 #-------------------------
 # Prepare input data

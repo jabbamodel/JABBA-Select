@@ -87,9 +87,9 @@ if(s==2) SELECT = FALSE
  names(cpue)
  names(catch)
 
-  #---------------------------------------
-  # option to exclude CPUE time series 
-  #---------------------------------------
+ #---------------------------------------
+ # option to exclude CPUE time series 
+ #---------------------------------------
   
   
   #------------------------------------------------------
@@ -118,6 +118,40 @@ if(s==2) SELECT = FALSE
   CV.psi = 0.05
   
   P_bound = c(0.03,1.2)
+  
+  #---------------------------------------------------------------
+  # STOCK PARAMETERS for prior generation Hmsy as a fuction of r
+  #---------------------------------------------------------------
+  
+  minage <- 0  																						
+  maxage <- ss4js$stock.pars$Amax
+  PlusGroup = TRUE
+  # Number of sexes order Female and Males (this model is sex-structured)
+  nsexes = 2
+  # VBGF parameters
+  Linf <- c(ss4js$stock.pars$vbgf_F[1],ss4js$stock.pars$vbgf_M[1])
+  kappa <- c(ss4js$stock.pars$vbgf_F[2],ss4js$stock.pars$vbgf_M[2])
+  t0 <- c(ss4js$stock.pars$vbgf_F[3],ss4js$stock.pars$vbgf_M[3])
+  
+  #Length-weight
+  aW <- exp(c(ss4js$stock.pars$LW_F[1],ss4js$stock.pars$LW_F[1])) 																						
+  bW <- c(ss4js$stock.pars$LW_F[2],ss4js$stock.pars$LW_F[2])
+  
+  # Maturity 
+  maturity = c(ss4js$stock.pars$mat,0)  #c(Lm50,Lm95,L=0/age=1) # two values are taken as length-based: Lm50 and Lm95 
+  # Reduce maturity to approximate mean length-at-first capture
+  if(s==3) maturity = c(100,ss4js$stock.pars$mat[2],0)  #c(Lm50,Lm95,L=0/age=1) # two values are taken as length-based: Lm50 and Lm95 
+  
+  # Natural mortality estimate (affects Hmsy)
+  M = 0.2
+  CV.M = 0.2 # ss3  M "fixed"
+  
+  # steepness B&H SSR (effects Hmsy and determines SBmsy/SB0)
+  h = 0.8
+  CV.h = 0.1
+  
+  
+  
   #--------------------------------------------------------------
   # Determine estimation for catchability q 
   #--------------------------------------------------------------
@@ -181,36 +215,6 @@ if(s==2) SELECT = FALSE
     # If SBmsy_SB0 = NULL the reference SBmsy_SB0 that produces MSY will be used 
     SBmsy_SB0 = NULL   # Standard Reference setting for SA Linefish assessment reference points
     
-  #---------------------------------------------------------------
-  # STOCK PARAMETERS for prior generation Hmsy as a fuction of r
-  #---------------------------------------------------------------
-    
-    minage <- 0  																						
-    maxage <- ss4js$stock.pars$Amax
-    PlusGroup = TRUE
-    # Number of sexes order Female and Males (this model is sex-structured)
-    nsexes = 2
-    # VBGF parameters
-    Linf <- c(ss4js$stock.pars$vbgf_F[1],ss4js$stock.pars$vbgf_M[1])
-    kappa <- c(ss4js$stock.pars$vbgf_F[2],ss4js$stock.pars$vbgf_M[2])
-    t0 <- c(ss4js$stock.pars$vbgf_F[3],ss4js$stock.pars$vbgf_M[3])
-    
-    #Length-weight
-    aW <- exp(c(ss4js$stock.pars$LW_F[1],ss4js$stock.pars$LW_F[1])) 																						
-    bW <- c(ss4js$stock.pars$LW_F[2],ss4js$stock.pars$LW_F[2])
-    
-    # Maturity 
-    maturity = c(ss4js$stock.pars$mat,0)  #c(Lm50,Lm95,L=0/age=1) # two values are taken as length-based: Lm50 and Lm95 
-    # Reduce maturity to approximate mean length-at-first capture
-    if(s==3) maturity = c(100,ss4js$stock.pars$mat[2],0)  #c(Lm50,Lm95,L=0/age=1) # two values are taken as length-based: Lm50 and Lm95 
-    
-    # Natural mortality estimate (affects Hmsy)
-    M = 0.2
-    CV.M = 0.2 # ss3  M "fixed"
-    
-    # steepness B&H SSR (effects Hmsy and determines SBmsy/SB0)
-    h = 0.8
-    CV.h = 0.1
     
   #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
   # Optional: Do TAC Projections

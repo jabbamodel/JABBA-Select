@@ -109,7 +109,7 @@ JABBA-SELECT is formulated to accommodate abundance indices from multiple source
 
 
 ##### <i> 3. Selectivity functions </i>
-JABBA-Select aims to account for the effects of different selectivity patterns on the stock's surplus production and arising distortions between spawning biomass (SB) and exploitable biomass (EB) when fitting the CPUE data. The selectivity functions under consideration are summarized in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) .csv file. The JABBA selex function provides the option to specify a 2-parameter logistic as well as a 5-parameter piece-wise dome-shaped selectivity curve, with a logistic function for the ascending limb and the descending limb described by the mean and CV of a half-normal distribution (Huynh et al., 2018). 
+JABBA-Select aims to account for the effects of different selectivity patterns on the stock's surplus production and arising distortions between spawning biomass (SB) and exploitable biomass (EB) when fitting the CPUE data. The selectivity functions under consideration are summarized in the [`selex`](https://github.com/jabbamodel/JABBA-Select/blob/master/KOBsim_example/KOBsim/selexKOBsim.csv) .csv file. The [JABBA SELEX function](https://github.com/jabbamodel/JABBA-Select/blob/master/SELEX_Tutorial/SELEX_Tutorial.md) provides the option to specify a 2-parameter logistic as well as a 5-parameter piece-wise dome-shaped selectivity curve, with a logistic function for the ascending limb and the descending limb described by the mean and CV of a half-normal distribution (Huynh et al., 2018). 
 <br>
 <img src="https://github.com/jabbamodel/JABBA-Select/blob/master/SWOss3/SELEX_SWOss3.png">
 <br>
