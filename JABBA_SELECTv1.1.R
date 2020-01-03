@@ -55,6 +55,36 @@ pr.proc=c(2,2)
 
 #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
 
+#--------------------------------------------------------------
+# Assign Selectivity, which will determine changes in r (Fmsy)
+#--------------------------------------------------------------
+
+# only unique SL50 values (no replicates) 
+# Selectivity SL50 must be sufficiently different (+-5%) between "fleets" to seperate r 
+
+# only unique SL50 values are permitted (no replicates) 
+SL50 <- as.numeric(selex[1,-1]) 
+SL95 <- as.numeric(selex[2,-1])  # If unknown set to 0.05*SL50 ~ knife-edge
+
+# Define point where descening limb starts (set Linf for logistic)
+SL.desc <-as.numeric(selex[3,-1])  # mean of half-normal 
+# Define rate of decreasing selectivity
+CV.desc <- as.numeric(selex[4,-1]) # CV of half-normal 
+# Define minimum descending limp between 0 and 1
+min.desc =as.numeric(selex[5,-1]) 
+
+# number of different Hmsy (r) priors 
+nSel = length(SL50)
+
+# Assign Selectivity to abundance indices
+sets.I = select$Selectivity[select$CPUE] 
+
+# Assign Selectivity to catch series
+sets.C = select$Selectivity[select$Catch] 
+
+# Define if index is in numbers: 0 or biomass: 1 
+I.unit =  aggregate(CPUE.units~Selectivity,data=select[select$CPUE,],mean)[,2]
+
 
 #-------------------------
 # Prepare input data
@@ -1042,7 +1072,7 @@ if(nSel>1) surplus.dat$dHmsy.pr =as.matrix(dHmsy.pr)
 JABBA_SELECT = "JABBA_SELECT.jags"
 
 # PARAMETERS TO MONITOR
-params <- c("SB0","r", "q", "psi","sigma2", "tau2","m","Hmsy","SBmsy", "MSY","Href","SBref","Yref", "BtoBmsy","HtoHmsy","CPUE","Proc.Dev","P","SB","Hmsy.y","prP","prBtoBmsy","prHtoHmsy","TOE","H","EB")
+params <- c("SB0","r", "q", "psi","sigma2", "tau2","m","Hmsy","SBmsy", "MSY","Href","SBref","Yref", "BtoBmsy","HtoHmsy","CPUE","Ihat","Proc.Dev","P","SB","Hmsy.y","prP","prBtoBmsy","prHtoHmsy","TOE","H","EB")
 
 cat(paste0("\n","><> RUN ",Mod.names," model for ",assessment," ",Scenario," in JAGS <><","\n","\n"))
 
@@ -1282,6 +1312,7 @@ if(sigma.est==TRUE){
     I[t,i] ~ dlnorm(Imean[t,i],(ivar.obs[t,i]));
     EB[t,i] <- P[t]*SB0*EBtoSB[t,i]   # Exploitable biomass
     CPUE[t,i] ~ dlnorm(Imean[t,i],(ivar.obs[t,i]))#q[sets.q[i]]*P[t]*SB0*EBtoSB[t,i]
+    Ihat[t,i]  <- exp(Imean[t,i])
     }}
     
     
@@ -1736,8 +1767,11 @@ for(i in 1:n.indices){
   yr = Yr-min(years)+1
   
   fit = apply(posteriors$CPUE[,,i],2,quantile,c(0.025,0.5,0.975))
+  fit.hat = apply(posteriors$Ihat[,,i],2,quantile,c(0.025,0.5,0.975))
   mufit = mean(fit[2,])
   fit = fit/mufit
+  fit.hat = fit.hat/mufit
+  
   cpue.i = CPUE[is.na(CPUE[,i])==F,i]
   yr.i = Yr[is.na(CPUE[,i])==F]
   se.i = sqrt(se2[is.na(CPUE[,i])==F,(i)])
@@ -1746,13 +1780,13 @@ for(i in 1:n.indices){
   
   cord.x <- c(Yr,rev(Yr))
   cord.y <- c(fit[1,yr],rev(fit[3,yr]))
-  
+  cord.yhat <- c(fit.hat[1,yr],rev(fit.hat[3,yr]))
   # Plot Observed vs predicted CPUE
   plot(years,CPUE[,i],ylab="",xlab="",ylim=ylim,xlim=range(years),type='n',xaxt="n",yaxt="n")
   axis(1,labels=TRUE,cex=0.8)
   axis(2,labels=TRUE,cex=0.8)
   polygon(cord.x,cord.y,col=grey(0.5,0.5),border=0,lty=2)
-  
+  polygon(cord.x,cord.yhat,col=grey(0.3,0.5),border=grey(0.3,0.5),lty=2)
   
   lines(Yr,fit[2,yr],lwd=2,col=1)
   if(SE.I ==TRUE | max(se2)>0.01){ plotCI(yr.i,cpue.i/mufit,ui=exp(log(cpue.i)+1.96*se.i)/mufit,li=exp(log(cpue.i)-1.96*se.i)/mufit,add=T,gap=0,pch=21,xaxt="n",yaxt="n")}else{
