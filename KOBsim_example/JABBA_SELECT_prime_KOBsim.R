@@ -48,7 +48,6 @@ jabba2FRL = TRUE
 save.all = FALSE # (if TRUE, a very large R object of entire posterior is saved)  
 #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
 
-
 Scenarios = c("SELECT","Pella")
 s=1
 
@@ -71,8 +70,15 @@ for(s in 1:length(Scenarios)){
   }
   names(cpue)
   names(catch)
+ 
   # Read select csv
   select = read.csv(paste0(File,"/",assessment,"/select",assessment,".csv"))
+  
+  # NOTE: 
+  ## only unique SL50 values (no replicates) 
+  ## Selectivity SL50 must be sufficiently different (+-5%) between "fleets" to seperate r 
+  
+  
   
   # Read selex (selectivity) csv
   selex = read.csv(paste0(File,"/",assessment,"/selex",assessment,".csv"))
@@ -81,7 +87,8 @@ for(s in 1:length(Scenarios)){
   #---------------------------------------
   # option to exclude CPUE time series 
   #---------------------------------------
-    
+  # Not used here
+  
   #------------------------------------------------------
   # Option use mean CPUE from state-space cpue averaging
   #-----------------------------------------------------
@@ -92,8 +99,7 @@ for(s in 1:length(Scenarios)){
   # mean and CV and sd for unfished biomass K (SB0)
   #------------------------------------------------
   mu.SB0 = 30000; CV.SB0 = 2; sd.SB0=sqrt(log(CV.SB0^2+1)) 
-  SB0.pr = c(mu.SB0,sd.SB0)
-    
+  SB0.pr = c(mu.SB0,CV.SB0) # Use CV as input
   
   #-----------------------------------------------------------
   # mean and CV and sd for Initial depletion level P1= SB/SB0
@@ -113,23 +119,16 @@ for(s in 1:length(Scenarios)){
     # Soft Penalty to control lower and upper SB_t/SB0
     P_bound = c(0.0001,1.5) # default if not specified
     
-    #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
-    # Prior specification for Model 5: JABBA-SELECT
-    #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
-    # The following section is ignored if: Model < 5
-    
-    # Option to set Bmsy reference point (e.g. SBmsy/SB0 = 0.4)
-    # If SBmsy_SB0 = NULL the model implicite estimate (SBmsy_SB0 where MSY) will be used 
-    SBmsy_SB0 = 0.4  # Standard Reference setting for SA Linefish assessment reference points
+
     
     #---------------------------------------------------------------
-    # STOCK PARAMETERS for prior generation Hmsy as a fuction of r
+    # STOCK PARAMETERS for prior generation Hmsy as a function of r
     #---------------------------------------------------------------
     # Age
     minage <- 0  																						
     maxage <- 20
     plusgroup = c(FALSE,TRUE)[1] 
-    #Growth paramters
+    #Growth paramters (von Bertalnffy)
     Linf <- 1372
     kappa <- 0.115
     t0 <-  -0.815
@@ -148,39 +147,9 @@ for(s in 1:length(Scenarios)){
     
     # steepness B&H SSR (effects Hmsy and determines SBmsy/SB0)
     h = 0.8
-    CV.h = 0.1
+    CV.h = 0.15
     
-    #------------------------------------------------
-    # Selectivity will determine changes in r (Fmsy)
-    #------------------------------------------------
-    # Selectivity SL50 must be sufficiently different (+-5%) to seperate r 
-    # only unique SL50 values (no replicates) 
-    
-    # Selectivity SL50 must be sufficiently different (+-5%) between "fleets" to seperate r 
-    
-    # only unique SL50 values are permitted (no replicates) 
-    SL50 <- as.numeric(selex[1,-1]) 
-    SL95 <- as.numeric(selex[2,-1])  # If unknown set to 0.05*SL50 ~ knife-edge
-    
-    # Define point where descening limb starts (set Linf for logistic)
-    SL.desc <-as.numeric(selex[3,-1])  # mean of half-normal 
-    # Define rate of decreasing selectivity
-    CV.desc <- as.numeric(selex[4,-1]) # CV of half-normal 
-    # Define minimum descending limp between 0 and 1
-    min.desc =as.numeric(selex[5,-1]) 
-    
-    # number of different Hmsy (r) priors 
-    nSel = length(SL50)
-    
-    # Assign Selectivity to abundance indices
-    sets.I = select$Selectivity[select$CPUE] 
-    
-    # Assign Selectivity to catch series
-    sets.C = select$Selectivity[select$Catch] # here 1: South, 2: South-East, 3: Trawl
-    
-    # Define if index is in numbers: 0 or biomass: 1 
-    I.unit =  aggregate(CPUE.units~Selectivity,data=select[select$CPUE,],mean)[,2]
-    
+   
     #--------------------------------------------------------------
     # Determine estimation for catchability q and observation error 
     #--------------------------------------------------------------
@@ -225,10 +194,21 @@ for(s in 1:length(Scenarios)){
         quantile(sqrt(gamma.check),c(0.1,0.9))
       }  
     }else{
-      sigma.proc = 0.05 #IF Fixed (sigma.est = FALSE): typicallly 0.05-0.15 (see Ono et al. 2012)
+     
+       sigma.proc = 0.1 #IF Fixed (sigma.est = FALSE): typicallly 0.05-0.15 (see Ono et al. 2012)
       
     }
-
+   
+    
+    #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
+    # Option to set Bmsy reference point (e.g. SBmsy/SB0 = 0.4)
+    #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
+    
+    
+    # If SBmsy_SB0 = NULL the model implicite estimate (SBmsy_SB0 where MSY) will be used 
+    SBmsy_SB0 = 0.4  # Standard Reference setting for SA Linefish assessment reference points
+   
+    
     #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
     # Optional: Do TAC Projections
     #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
@@ -246,11 +226,10 @@ for(s in 1:length(Scenarios)){
     # Set number of projections years
     pyrs = 10
     
+    
     #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
     # Execute model and produce output
     #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>
-    
-  
     
     # MCMC settings
     ni <- 14000 # Number of iterations
