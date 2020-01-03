@@ -22,10 +22,10 @@ vectors and estimate the five selex input parameters for JABBA-Select,
 where `SL50` and `SL95` are the lengths along a logistic ogive where 50%
 and 95% of fish are selected, `SL.desc` determines length were right
 limb of a dome shaped curve is starting descend as a function of a
-half-normal distribution, `CV.desc` of the half-normal and thus
-represents the rate of descent and `min.desc` determines the minimum
-height of the descending curve after which it remains constant (c.f. SS3
-SELEX)
+half-normal distribution, `CV.desc` is the CV of the half-normal and
+thus represents the rate of descent and `min.desc` determines the
+minimum height of the descending curve after which it remains constant
+(c.f. SS3 SELEX)
 
     #--------------------------------------
     # JABBA-Selex function
