@@ -1022,10 +1022,9 @@ if(Projection==TRUE){
 #stI = c(1:n.years)[is.na(apply(CPUE,1,mean,na.rm=TRUE))==FALSE][1] #first year with CPUE
 stI = ifelse(proc.dev.all==TRUE,1, which(proc.dev.all==years)) #first year with CPUE
 
-inits <- function(){list(SB0= rlnorm(1,log(mu.SB0),0.3),q = (aggregate(EBSB[sets.EB]~sets.q,FUN=mean)[,2]*runif(nq,min(CPUE,na.rm=T)/max(apply(Catch,1,sum),na.rm=T),mean(CPUE,na.rm=T)/max(apply(Catch,1,sum)))),  proc.est=ifelse(proc.type=="igamma",runif(1,30,100),1/runif(1,20,100)), itau2=runif(nvar,80,200), psi=mu.psi,log.prod.pars=apply(rmvnorm(50 ,mean = mu_prod_prior,sigma = cov_prod_prior),2,mean))}
-
+inits <- function(){list(SB0= rlnorm(1,log(mu.SB0),0.3),q = (aggregate(EBSB[sets.EB]~sets.q,FUN=mean)[,2]*runif(nq,min(CPUE,na.rm=T)/max(apply(Catch,1,sum),na.rm=T),mean(CPUE,na.rm=T)/max(apply(Catch,1,sum)))),  proc.est=ifelse(proc.type=="igamma",runif(1,30,100),rlnorm(1,pr.proc[1],0.05)), itau2=runif(nvar,80,200), psi=mu.psi,log.prod.pars=apply(rmvnorm(50 ,mean = mu_prod_prior,sigma = cov_prod_prior),2,mean))}
 if(init.values==TRUE){
-  inits <- function(){list(SB0= init.SB0,q = init.q, proc.est=ifelse(proc.type=="igamma",runif(1,30,100),1/runif(1,20,100)), itau2=runif(nvar,80,200), psi=mu.psi,log.prod.pars=apply(rmvnorm(500 ,mean = mu_prod_prior,sigma = cov_prod_prior),2,mean))}
+  inits <- function(){list(SB0= init.SB0,q = init.q, proc.est=ifelse(proc.type=="igamma",runif(1,30,100),rlnorm(1,pr.proc[1],0.05)), itau2=runif(nvar,80,200), psi=mu.psi,log.prod.pars=apply(rmvnorm(500 ,mean = mu_prod_prior,sigma = cov_prod_prior),2,mean))}
 }
 
 if(sigma.proc!=TRUE) pr.proc = c(log(0.07),0.1)
@@ -1127,7 +1126,7 @@ cat("
       proc.est ~ dlnorm(pr.proc[1],pr.proc[2])
       sigma <- proc.est 
       sigma2 <- pow(sigma,2)
-      isigma2 <- pow(sigma,-2)
+      isigma2 <- pow(proc.est,-2)
       fakesigma.fixed <- sigma.fixed # Prevent unused variable error msg    
           
       ",append=TRUE)}}else{ 
@@ -1813,6 +1812,65 @@ mtext(paste("Year"), side=1, outer=TRUE, at=0.5,line=1,cex=1)
 mtext(paste("Log Index"), side=2, outer=TRUE, at=0.5,line=1,cex=1)
 dev.off()
 
+
+#-------------------------------------------------
+# Function to do runs.test and 3 x sigma limits  
+#------------------------------------------------
+runs.sig3 <- function(x,type="resid") {
+  if(type=="resid"){mu = 0}else{mu = mean(x, na.rm = TRUE)} 
+  # Average moving range
+  mr  <- abs(diff(x - mu))
+  amr <- mean(mr, na.rm = TRUE)
+  # Upper limit for moving ranges
+  ulmr <- 3.267 * amr
+  # Remove moving ranges greater than ulmr and recalculate amr, Nelson 1982
+  mr  <- mr[mr < ulmr]
+  amr <- mean(mr, na.rm = TRUE)
+  # Calculate standard deviation, Montgomery, 6.33
+  stdev <- amr / 1.128
+  # Calculate control limits
+  lcl <- mu - 3 * stdev
+  ucl <- mu + 3 * stdev
+  if(nlevels(factor(sign(x)))>1){ 
+    runstest = snpar::runs.test(resid) 
+    pvalue = round(runstest$p.value,3)} else {
+      pvalue = 0.001  
+    }
+  
+  return(list(sig3lim=c(lcl,ucl),p.runs= pvalue))
+}
+
+
+# Residual Runs test plot
+Par = list(mfrow=c(round(n.indices/2+0.01,0),ifelse(n.indices==1,1,2)),mai=c(0.35,0.15,0,.15),omi = c(0.2,0.25,0.2,0) + 0.1,mgp=c(2,0.5,0), tck = -0.02,cex=0.8)
+png(file = paste0(output.dir,"/Residual_RunsTests_",assessment,"_",Scenario,".png"), width = 7, height = ifelse(n.indices==1,5,ifelse(n.indices==2,3.,2.5))*round(n.indices/2+0.01,0), 
+    res = 200, units = "in")
+par(Par)
+
+
+for(i in 1:n.indices){
+  
+  resid = Resids[i,is.na(Resids[i,])==F]  
+  res.yr = years[is.na(Resids[i,])==F]
+  runstest = runs.sig3(resid)
+  # CPUE Residuals with runs test
+  plot(res.yr,rep(0,length(res.yr)),type="n",ylim=c(min(-1,runstest$sig3lim[1]*1.25),max(1,runstest$sig3lim[2]*1.25)),lty=1,lwd=1.3,xlab="Year",ylab=expression(log(cpue[obs])-log(cpue[pred])))
+  abline(h=0,lty=2)
+  RMSE = sqrt(mean(resid^2)) # Residual mean sqrt error
+  lims = runstest$sig3lim
+  cols =  c(rgb(1,0,0,0.5),rgb(0,1,0,0.5))[ifelse(runstest$p.runs<0.05,1,2)]
+  rect(min(years-1),lims[1],max(years+1),lims[2],col=cols,border=cols) # only show runs if RMSE >= 0.1
+  for(j in 1:length(resid)){
+    lines(c(res.yr[j],res.yr[j]),c(0,resid[j]))  
+  }
+  points(res.yr,resid,pch=21,bg=ifelse(resid < lims[1] | resid > lims[2],2,"white"),cex=1)
+  legend('topright',paste(indices[i]),bty="n",y.intersp = -0.2,cex=0.8)
+  }  
+
+
+mtext(paste("Year"), side=1, outer=TRUE, at=0.5,line=1,cex=1)
+mtext(expression(log(cpue[obs])-log(cpue[pred])), side=2, outer=TRUE, at=0.5,line=1,cex=1)
+dev.off()
 
 
 # JABBA-residual plot
