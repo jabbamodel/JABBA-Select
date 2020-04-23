@@ -7,11 +7,11 @@
 rm(list=ls())
 gc()
 # Install required packages if missing
-list.of.packages <- c("gplots", "coda","rjags","R2jags","fitdistrplus","reshape","mvtnorm","scales")
+list.of.packages <- c("gplots", "coda","rjags","R2jags","fitdistrplus","reshape","mvtnorm","scales",'snpar')
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 # Load Packages
-library(gplots);library(coda);library(rjags);library(R2jags);library("fitdistrplus");library(reshape);
+library(gplots);library(coda);library(rjags);library(R2jags);library("fitdistrplus");library(reshape);library('snpar')
 library(mvtnorm);library(scales)
 
 #---------------------------------------------------------------------
@@ -165,7 +165,7 @@ for(s in 1:length(Scenarios)){
     sigma.est = c(TRUE,FALSE)[1]
     # As option for data-weighing
     # minimum additional observation error for each variance set (optional choose 1 value for both)
-    fixed.obsE = 0.01
+    fixed.obsE = 0.001
     
     #><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>><>>
     # Process Error
